@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Servicios from '../components/Servicios.astro';
+import Testimonios from '../components/Testimonios.astro';
+import Videos from '../components/Videos.astro';
+import Resumenes from '../components/Resumenes.astro';
+import { sitio } from '../data/sitio';
+---
+
+<Base
+  title={`${sitio.nombre} · Clases particulares de matemática PAES y universidad`}
+  decor
+>
+  <Hero />
+  <Servicios />
+  <Testimonios />
+  <Videos />
+  <Resumenes />
+</Base>

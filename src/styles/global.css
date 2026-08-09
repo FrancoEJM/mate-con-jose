@@ -1,0 +1,290 @@
+:root {
+  /* Paleta */
+  --crema: #f5efe6;
+  --papel: #fdfbf7;
+  --tinta: #1b1f3b;
+  --violeta: #8b7cc8;
+  --violeta-osc: #5b4b8a;
+  --lila: #b5a9da;
+  --lila-borde: #c9bee4;
+  --lila-fondo: #f0ebfa;
+  --arena: #e3dac9;
+  --texto: #3a3f5c;
+  --texto-suave: #6b6f86;
+  --texto-tenue: #9a94a8;
+  --texto-claro: #e7e2f2;
+
+  /* Tipografía */
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'Outfit', system-ui, sans-serif;
+  --script: 'Dancing Script', cursive;
+
+  /* Sombras */
+  --sombra-card: 0 10px 30px rgba(27, 31, 59, 0.06);
+  --sombra-alta: 0 20px 50px rgba(27, 31, 59, 0.28);
+  --sombra-boton: 0 8px 20px rgba(139, 124, 200, 0.35);
+
+  /* Contenedor */
+  --ancho: 1200px;
+  --gutter: clamp(16px, 4vw, 24px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  background: var(--crema);
+  color: var(--tinta);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--violeta-osc);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--violeta);
+}
+
+img {
+  max-width: 100%;
+}
+
+::selection {
+  background: var(--lila);
+  color: var(--tinta);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--violeta);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Contenedores de sección */
+.seccion {
+  max-width: var(--ancho);
+  margin: 0 auto;
+  padding: clamp(40px, 6vw, 72px) var(--gutter);
+}
+
+.seccion-titulo {
+  margin: 0 0 12px;
+  font-family: var(--serif);
+  font-weight: 800;
+  font-size: clamp(2.1rem, 4.5vw, 3rem);
+  color: var(--tinta);
+}
+
+.seccion-intro {
+  text-align: center;
+  max-width: 660px;
+  margin: 0 auto 36px;
+}
+
+.seccion-intro p {
+  margin: 0;
+  color: #5a5e78;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.banda {
+  background: var(--papel);
+  border-top: 1px solid var(--arena);
+  border-bottom: 1px solid var(--arena);
+}
+
+/* Botones */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 30px;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 14px;
+  border: 0;
+  cursor: pointer;
+  text-align: center;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.btn-primario {
+  background: var(--violeta);
+  color: var(--papel);
+  box-shadow: var(--sombra-boton);
+}
+
+.btn-primario:hover {
+  background: var(--violeta-osc);
+  color: var(--papel);
+  transform: translateY(-1px);
+}
+
+.btn-borde {
+  background: transparent;
+  color: var(--violeta-osc);
+  border: 2px solid var(--violeta);
+}
+
+.btn-borde:hover {
+  background: var(--violeta);
+  color: var(--papel);
+}
+
+.btn-suave {
+  background: none;
+  border: 1px solid var(--lila-borde);
+  color: var(--violeta-osc);
+  padding: 12px;
+  font-size: 15px;
+  border-radius: 12px;
+}
+
+.btn-suave:hover {
+  background: var(--lila-fondo);
+  color: var(--violeta-osc);
+}
+
+/* Tarjetas */
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--papel);
+  border: 1px solid var(--arena);
+  border-radius: 20px;
+  padding: clamp(22px, 4.5vw, 32px);
+  box-shadow: var(--sombra-card);
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card-head h4 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: var(--tinta);
+}
+
+.pastilla {
+  padding: 5px 12px;
+  background: var(--lila-fondo);
+  color: var(--violeta-osc);
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.card-desc {
+  margin: 6px 0 20px;
+  color: var(--texto-suave);
+  font-size: 14px;
+}
+
+.checklist {
+  list-style: none;
+  margin: 0 0 28px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--texto);
+  font-size: 15px;
+}
+
+.checklist li {
+  display: flex;
+  gap: 10px;
+}
+
+.checklist li::before {
+  content: '✓';
+  color: var(--violeta);
+  flex: 0 0 auto;
+}
+
+/* Carruseles horizontales */
+.carrusel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carrusel::-webkit-scrollbar {
+  height: 8px;
+}
+
+.carrusel::-webkit-scrollbar-thumb {
+  background: #d9cebb;
+  border-radius: 99px;
+}
+
+.carrusel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Diálogos nativos: modales de programa, lightbox y menú móvil */
+dialog {
+  border: 0;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+}
+
+dialog::backdrop {
+  background: rgba(27, 31, 59, 0.85);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+/* Aparición al hacer scroll. La clase .js la pone un script inline en el <head>:
+   sin JS nunca se aplica el opacity:0 y el contenido se ve entero. */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+
+.js [data-reveal].visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

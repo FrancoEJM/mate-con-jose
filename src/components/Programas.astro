@@ -1,0 +1,479 @@
+---
+import { waAgendar } from '../data/sitio';
+import { programas, coloresPlan } from '../data/programas';
+---
+
+<h3 class="subtitulo" data-reveal><span aria-hidden="true"></span>Programas</h3>
+
+<div class="grid-programas">
+  {
+    programas.map((p) => (
+      <div class:list={['card', { destacado: p.destacado }]} data-reveal>
+        {p.destacado && <span class="cinta">Más elegido</span>}
+        <div class="card-head">
+          <h4>{p.title}</h4>
+          <span class="pastilla">{p.weeks}</span>
+        </div>
+        <p class="card-desc">{p.resumen}</p>
+        <ul class="checklist">
+          {p.bullets.map((b) => (
+            <li>{b}</li>
+          ))}
+        </ul>
+        <div class="acciones">
+          <button type="button" class="btn btn-suave" data-abrir={p.id}>
+            Ver programación
+          </button>
+          <a class="btn btn-borde cta" href={waAgendar} target="_blank" rel="noopener">
+            Postular al programa
+          </a>
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+{
+  programas.map((p) => {
+    const totalSemanas = p.plan?.reduce((a, e) => a + e.semanas, 0) ?? 0;
+    return (
+      <dialog id={`prog-${p.id}`} class="modal" aria-label={`Programación de ${p.title}`}>
+        <div class="modal-head">
+          <button class="cerrar" aria-label="Cerrar" data-cerrar>
+            ×
+          </button>
+          <span class="pastilla oscura">{p.weeks}</span>
+          <h3>{p.title}</h3>
+          <p>{p.desc}</p>
+        </div>
+
+        <div class="modal-body">
+          <h4>¿Qué incluye?</h4>
+
+          {p.incluye ? (
+            <div class="incluye">
+              {p.incluye.map((i) => (
+                <div>
+                  <span aria-hidden="true">✓</span>
+                  <span>{i}</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <ul class="checklist bullets">
+              {p.bullets.map((b) => (
+                <li>{b}</li>
+              ))}
+            </ul>
+          )}
+
+          {p.plan && (
+            <>
+              <h4>Planificación semanal · {totalSemanas} semanas</h4>
+              <div class="barra" role="img" aria-label={`Distribución: ${p.plan.map((e) => `${e.eje} ${e.semanas} semanas`).join(', ')}`}>
+                {p.plan.map((e, i) => (
+                  <div style={`flex:${e.semanas};background:${coloresPlan[i % coloresPlan.length]}`} />
+                ))}
+              </div>
+              <div class="leyenda">
+                {p.plan.map((e, i) => (
+                  <div>
+                    <span
+                      class="punto"
+                      style={`background:${coloresPlan[i % coloresPlan.length]}`}
+                      aria-hidden="true"
+                    />
+                    <span class="eje">{e.eje}</span>
+                    <span class="semanas">{e.semanas} semanas</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {p.valores && (
+            <>
+              <h4>
+                Valores <small>· duración 5 meses</small>
+              </h4>
+              <div class="valores">
+                {p.valores.map((v) => (
+                  <div class:list={['valor', { destacado: v.destacado }]}>
+                    <div class="etiqueta">{v.etiqueta}</div>
+                    <div class="monto">{v.monto}</div>
+                    <div class="detalle">{v.detalle}</div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {!p.incluye && (
+            <p class="cierre">
+              Escríbeme por WhatsApp y te envío la programación completa y los valores de este
+              programa.
+            </p>
+          )}
+
+          <div class="modal-acciones">
+            {p.pdf && (
+              <a class="btn btn-primario" href={p.pdf} download={p.pdfName}>
+                ↓ Descargar PDF
+              </a>
+            )}
+            <a class="btn btn-borde" href={waAgendar} target="_blank" rel="noopener">
+              Postular por WhatsApp
+            </a>
+            <button type="button" class="btn btn-cerrar" data-cerrar>
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </dialog>
+    );
+  })
+}
+
+<style>
+  .subtitulo {
+    margin: 0 0 20px;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--tinta);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .subtitulo span {
+    width: 34px;
+    height: 2px;
+    background: var(--violeta);
+    flex: 0 0 auto;
+  }
+
+  .grid-programas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: 32px 24px;
+    align-items: stretch;
+  }
+
+  .card-head h4 {
+    font-size: 1.4rem;
+  }
+
+  .card.destacado {
+    position: relative;
+    background: var(--tinta);
+    border-color: var(--tinta);
+    box-shadow: var(--sombra-alta);
+  }
+
+  .card.destacado h4 {
+    color: var(--papel);
+  }
+
+  .card.destacado .card-desc {
+    color: var(--lila);
+  }
+
+  .card.destacado .pastilla {
+    background: rgba(181, 169, 218, 0.2);
+    color: var(--lila);
+  }
+
+  .card.destacado .checklist {
+    color: var(--texto-claro);
+  }
+
+  .card.destacado .checklist li::before {
+    color: var(--lila);
+  }
+
+  .card.destacado .btn-suave {
+    background: rgba(181, 169, 218, 0.16);
+    border-color: rgba(181, 169, 218, 0.5);
+    color: var(--texto-claro);
+  }
+
+  .card.destacado .btn-suave:hover {
+    background: rgba(181, 169, 218, 0.28);
+    color: var(--texto-claro);
+  }
+
+  .card.destacado .btn-borde {
+    background: var(--violeta);
+    color: var(--papel);
+    border-color: var(--violeta);
+  }
+
+  .card.destacado .btn-borde:hover {
+    background: var(--lila);
+  }
+
+  .cinta {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--violeta);
+    color: var(--papel);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 7px 16px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .acciones {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .cta {
+    padding: 13px;
+    font-size: 15px;
+    border-radius: 12px;
+  }
+
+  /* Modal */
+  .modal {
+    width: min(720px, calc(100% - 2 * clamp(10px, 3vw, 24px)));
+    max-width: none;
+    max-height: calc(100dvh - 2 * clamp(10px, 3vw, 24px));
+    margin: auto;
+    background: var(--papel);
+    border-radius: 24px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+
+  .modal-head {
+    position: relative;
+    padding: clamp(20px, 5vw, 28px) clamp(18px, 5vw, 32px);
+    background: var(--tinta);
+    color: var(--papel);
+  }
+
+  .cerrar {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(253, 251, 247, 0.35);
+    background: rgba(253, 251, 247, 0.12);
+    color: var(--papel);
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .pastilla.oscura {
+    display: inline-block;
+    background: rgba(181, 169, 218, 0.25);
+    color: var(--lila);
+    margin-bottom: 10px;
+  }
+
+  .modal-head h3 {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(1.3rem, 5vw, 1.7rem);
+    padding-right: 44px;
+  }
+
+  .modal-head p {
+    margin: 8px 0 0;
+    color: var(--lila);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .modal-body {
+    padding: clamp(20px, 5vw, 28px) clamp(18px, 5vw, 32px);
+  }
+
+  .modal-body h4 {
+    margin: 32px 0 14px;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--tinta);
+  }
+
+  .modal-body h4:first-child {
+    margin-top: 0;
+  }
+
+  .modal-body h4 small {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: var(--violeta);
+  }
+
+  .incluye {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 12px 20px;
+    align-items: start;
+  }
+
+  .incluye > div {
+    display: flex;
+    gap: 10px;
+    color: var(--texto);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .incluye span:first-child {
+    color: var(--violeta);
+    flex: 0 0 auto;
+  }
+
+  .checklist.bullets {
+    margin-bottom: 20px;
+  }
+
+  .barra {
+    display: flex;
+    height: 14px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .leyenda {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .leyenda > div {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+  }
+
+  .punto {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex: 0 0 auto;
+    display: inline-block;
+  }
+
+  .eje {
+    flex: 1 1 120px;
+    color: var(--texto);
+    font-size: 15px;
+  }
+
+  .semanas {
+    color: var(--violeta);
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .valores {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: 12px;
+  }
+
+  .valor {
+    background: var(--crema);
+    border: 1px solid var(--arena);
+    border-radius: 14px;
+    padding: 16px;
+  }
+
+  .valor.destacado {
+    background: var(--lila-fondo);
+    border-color: var(--lila-borde);
+  }
+
+  .valor .etiqueta {
+    color: var(--violeta);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+
+  .valor.destacado .etiqueta,
+  .valor.destacado .detalle {
+    color: var(--violeta-osc);
+  }
+
+  .valor .monto {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--tinta);
+  }
+
+  .valor .detalle {
+    color: var(--texto-suave);
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  .cierre {
+    margin: 0;
+    color: var(--texto-suave);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .modal-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .modal-acciones .btn {
+    padding: 12px 24px;
+    font-size: 15px;
+    border-radius: 12px;
+  }
+
+  .btn-cerrar {
+    background: none;
+    border: 1px solid var(--arena);
+    color: var(--texto-suave);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-abrir]').forEach((btn) => {
+    const dlg = document.getElementById(`prog-${btn.dataset.abrir}`) as HTMLDialogElement | null;
+    if (!dlg) return;
+
+    btn.addEventListener('click', () => dlg.showModal());
+    dlg.querySelectorAll('[data-cerrar]').forEach((c) =>
+      c.addEventListener('click', () => dlg.close())
+    );
+    // El <dialog> ocupa todo el viewport: solo cuenta como backdrop lo que cae fuera de su caja.
+    dlg.addEventListener('click', (e) => {
+      const r = dlg.getBoundingClientRect();
+      const fuera =
+        e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+      if (fuera) dlg.close();
+    });
+  });
+</script>

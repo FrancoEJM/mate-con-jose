@@ -1,0 +1,153 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { sitio } from '../data/sitio';
+
+interface Props {
+  title: string;
+  description?: string;
+  navVariante?: 'completa' | 'simple';
+  /** Los símbolos matemáticos de fondo. Solo en la portada. */
+  decor?: boolean;
+}
+
+const {
+  title,
+  description = sitio.descripcion,
+  navVariante = 'completa',
+  decor = false,
+} = Astro.props;
+
+const decoraciones = [
+  { s: '∫', top: '8%', left: '4%', size: '120px', color: 'var(--tinta)', op: 0.035 },
+  { s: 'f(x)=ax²+bx+c', top: '24%', right: '6%', size: '90px', color: 'var(--violeta)', op: 0.06, it: true },
+  { s: '∑', top: '52%', left: '7%', size: '80px', color: 'var(--violeta)', op: 0.05 },
+  { s: '√', top: '70%', right: '10%', size: '110px', color: 'var(--tinta)', op: 0.035 },
+  { s: 'π · Δy/Δx', top: '40%', left: '42%', size: '70px', color: 'var(--violeta)', op: 0.04, it: true },
+  { s: 'lim x→∞', bottom: '6%', left: '30%', size: '60px', color: 'var(--tinta)', op: 0.04, it: true },
+  { s: 'θ', top: '14%', right: '34%', size: '64px', color: 'var(--violeta)', op: 0.045 },
+];
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={new URL('/assets/logo.png', Astro.site)} />
+    <link rel="icon" href="/assets/logo.png" />
+    <link rel="canonical" href={Astro.url.href} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Outfit:wght@300;400;500;600;700&family=Dancing+Script:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <slot name="head" />
+    <script is:inline>
+      // Marca que hay JS antes del primer pintado, para que las animaciones de
+      // aparición no dejen la página en blanco si el script falla o está desactivado.
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body>
+    {
+      decor && (
+        <div class="decor" aria-hidden="true">
+          {decoraciones.map((d) => (
+            <span
+              style={`top:${d.top ?? 'auto'};bottom:${d.bottom ?? 'auto'};left:${d.left ?? 'auto'};right:${d.right ?? 'auto'};font-size:${d.size};color:${d.color};opacity:${d.op};font-style:${d.it ? 'italic' : 'normal'}`}
+            >
+              {d.s}
+            </span>
+          ))}
+        </div>
+      )
+    }
+
+    <Nav variante={navVariante} />
+
+    <main>
+      <slot />
+    </main>
+
+    <Footer />
+
+    <script>
+      // Aparición al hacer scroll. Sin IntersectionObserver todo queda visible.
+      const els = document.querySelectorAll('[data-reveal]');
+      if (!('IntersectionObserver' in window)) {
+        els.forEach((el) => el.classList.add('visible'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) =>
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                io.unobserve(e.target);
+              }
+            }),
+          { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+        );
+        els.forEach((el) => io.observe(el));
+      }
+
+      // Carruseles con avance automático cada 5s. Se pausan con el puntero encima.
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const carruseles = document.querySelectorAll<HTMLElement>('[data-auto-scroll]');
+        if (carruseles.length) {
+          setInterval(() => {
+            for (const el of carruseles) {
+              if (el.hidden || el.scrollWidth <= el.clientWidth + 4) continue;
+              if (el.matches(':hover')) continue;
+              const primera = el.querySelector<HTMLElement>(':scope > *:not([hidden])');
+              const paso = primera
+                ? primera.getBoundingClientRect().width + 24
+                : el.clientWidth * 0.8;
+              if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 8) {
+                el.scrollTo({ left: 0, behavior: 'smooth' });
+              } else {
+                el.scrollBy({ left: paso, behavior: 'smooth' });
+              }
+            }
+          }, 5000);
+        }
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  .decor {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    font-family: var(--serif);
+  }
+
+  .decor span {
+    position: absolute;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* En móvil los símbolos estorban más de lo que aportan. */
+  @media (max-width: 860px) {
+    .decor {
+      display: none;
+    }
+  }
+</style>

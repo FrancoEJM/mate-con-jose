@@ -1,0 +1,84 @@
+---
+import { testimonios } from '../data/testimonios';
+---
+
+<section class="banda">
+  <div class="interior">
+    <h2 data-reveal>Lo que dicen mis estudiantes</h2>
+    <div class="carrusel" data-auto-scroll>
+      {
+        testimonios.map((t) => (
+          <figure>
+            <div class="estrellas" aria-label="5 de 5 estrellas">
+              ★★★★★
+            </div>
+            <blockquote>«{t.quote}»</blockquote>
+            <figcaption>
+              {t.name} <span>· {t.role}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  section {
+    margin-top: 24px;
+  }
+
+  .interior {
+    max-width: var(--ancho);
+    margin: 0 auto;
+    padding: clamp(40px, 6vw, 64px) 0;
+  }
+
+  h2 {
+    text-align: center;
+    margin: 0 0 32px;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+    color: var(--tinta);
+  }
+
+  .carrusel {
+    gap: 20px;
+    padding: 8px var(--gutter) 20px;
+  }
+
+  figure {
+    margin: 0;
+    flex: 0 0 min(340px, 82vw);
+    scroll-snap-align: center;
+    background: var(--crema);
+    border: 1px solid var(--arena);
+    border-radius: 18px;
+    padding: clamp(20px, 5vw, 28px);
+  }
+
+  .estrellas {
+    color: var(--violeta);
+    font-size: 20px;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+  }
+
+  blockquote {
+    margin: 0 0 18px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--texto);
+  }
+
+  figcaption {
+    font-weight: 600;
+    color: var(--tinta);
+  }
+
+  figcaption span {
+    color: var(--violeta);
+    font-weight: 500;
+  }
+</style>

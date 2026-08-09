@@ -1,0 +1,194 @@
+---
+import { sitio, waAgendar } from '../data/sitio';
+
+const contactos = [
+  { icono: '✆', href: waAgendar, texto: `WhatsApp ${sitio.telefono}`, externo: true },
+  {
+    icono: '◉',
+    href: `https://instagram.com/${sitio.instagram}`,
+    texto: `Instagram @${sitio.instagram}`,
+    externo: true,
+  },
+  {
+    icono: '♪',
+    href: `https://tiktok.com/@${sitio.tiktok}`,
+    texto: `TikTok @${sitio.tiktok}`,
+    externo: true,
+  },
+  { icono: '✉', href: `mailto:${sitio.email}`, texto: sitio.email, externo: false },
+];
+---
+
+<footer id="contacto">
+  <div class="interior">
+    <div class="columnas">
+      <div class="col-marca">
+        <div class="marca">
+          <img src="/assets/logo.png" alt={`Logo ${sitio.nombre}`} width="60" height="60" />
+          <span>{sitio.nombre}</span>
+        </div>
+        <p class="lema">{sitio.descripcion}</p>
+        <div class="contactos">
+          {
+            contactos.map((c) => (
+              <a
+                href={c.href}
+                target={c.externo ? '_blank' : undefined}
+                rel={c.externo ? 'noopener' : undefined}
+              >
+                <span class="icono" aria-hidden="true">
+                  {c.icono}
+                </span>
+                {c.texto}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="col-qr">
+        <h3>Escanea y sígueme</h3>
+        <div class="qrs">
+          <img
+            src="/assets/qr-instagram.png"
+            alt={`Código QR de Instagram @${sitio.instagram}`}
+            loading="lazy"
+          />
+          <img
+            src="/assets/qr-tiktok.png"
+            alt={`Código QR de TikTok @${sitio.tiktok}`}
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="legal">
+      <span>© {new Date().getFullYear()} {sitio.nombre} · {sitio.ciudad}</span>
+      <span>Hecho con paciencia y café ☕</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer {
+    position: relative;
+    z-index: 1;
+    background: var(--tinta);
+    color: var(--texto-claro);
+  }
+
+  .interior {
+    max-width: var(--ancho);
+    margin: 0 auto;
+    padding: clamp(40px, 6vw, 72px) var(--gutter);
+  }
+
+  .columnas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(32px, 5vw, 48px);
+    justify-content: space-between;
+  }
+
+  .col-marca {
+    flex: 1 1 min(100%, 320px);
+  }
+
+  .marca {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .marca img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .marca span {
+    font-family: var(--script);
+    font-weight: 700;
+    font-size: 32px;
+    color: var(--papel);
+  }
+
+  .lema {
+    margin: 0 0 24px;
+    color: var(--lila);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 42ch;
+  }
+
+  .contactos {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .contactos a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--texto-claro);
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .contactos a:hover {
+    color: var(--lila);
+  }
+
+  .icono {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(181, 169, 218, 0.18);
+    border-radius: 10px;
+    font-size: 18px;
+  }
+
+  .col-qr {
+    flex: 0 1 auto;
+  }
+
+  .col-qr h3 {
+    margin: 0 0 18px;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--papel);
+  }
+
+  .qrs {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  .qrs img {
+    width: min(210px, 42vw);
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+  }
+
+  .legal {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(181, 169, 218, 0.2);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+    color: #8f93b0;
+    font-size: 13px;
+  }
+</style>

@@ -1,0 +1,256 @@
+---
+interface Props {
+  url: string;
+  title?: string;
+}
+
+const { url, title = 'Ver video' } = Astro.props;
+
+type Info =
+  | { platform: 'youtube' | 'tiktok' | 'instagram'; id: string }
+  | { platform: 'tiktoklink'; href: string }
+  | { platform: 'unknown' };
+
+/** Los links cortos (vt./vm.tiktok.com) no traen el id, así que no se pueden incrustar. */
+function parse(u: string): Info {
+  if (!u) return { platform: 'unknown' };
+  let m = u.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{6,})/);
+  if (m) return { platform: 'youtube', id: m[1] };
+  m = u.match(/tiktok\.com\/(?:@[\w.-]+\/video\/|v\/|embed\/(?:v2\/)?)(\d{6,})/);
+  if (m) return { platform: 'tiktok', id: m[1] };
+  m = u.match(/instagram\.com\/(?:reel|reels|p|tv)\/([\w-]+)/);
+  if (m) return { platform: 'instagram', id: m[1] };
+  if (/tiktok\.com|vt\.tiktok|vm\.tiktok/.test(u)) return { platform: 'tiktoklink', href: u };
+  return { platform: 'unknown' };
+}
+
+const info = parse(url);
+---
+
+<div class="embed">
+  {
+    info.platform === 'youtube' && (
+      <div class="marco youtube">
+        <iframe
+          src={`https://www.youtube.com/embed/${info.id}?rel=0`}
+          title={title}
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        />
+      </div>
+    )
+  }
+
+  {
+    info.platform === 'tiktok' && (
+      <div class="columna">
+        <div class="marco vertical">
+          <iframe
+            src={`https://www.tiktok.com/embed/v2/${info.id}`}
+            title={title}
+            loading="lazy"
+            allow="autoplay; encrypted-media; fullscreen"
+            allowfullscreen
+          />
+        </div>
+      </div>
+    )
+  }
+
+  {
+    info.platform === 'instagram' && (
+      <div class="columna ancha">
+        <div class="marco instagram">
+          <iframe
+            src={`https://www.instagram.com/reel/${info.id}/embed/`}
+            title={title}
+            loading="lazy"
+            scrolling="no"
+            allow="autoplay; encrypted-media; picture-in-picture"
+            allowfullscreen
+          />
+        </div>
+      </div>
+    )
+  }
+
+  {
+    (info.platform === 'tiktoklink' || info.platform === 'unknown') && (
+      <div class="columna">
+        {info.platform === 'tiktoklink' ? (
+          <a class="tarjeta" href={info.href} target="_blank" rel="noopener">
+            <span class="simbolos" aria-hidden="true">
+              <span>f(x)</span>
+              <span>∑</span>
+              <span>√x</span>
+            </span>
+            <span class="centro">
+              <span class="play" aria-hidden="true">
+                ▶
+              </span>
+              <span class="titulo">{title}</span>
+              <span class="pill">Ver en TikTok ↗</span>
+            </span>
+          </a>
+        ) : (
+          <div class="tarjeta">
+            <span class="simbolos" aria-hidden="true">
+              <span>f(x)</span>
+              <span>∑</span>
+              <span>√x</span>
+            </span>
+            <span class="centro">
+              <span class="play" aria-hidden="true">
+                ▶
+              </span>
+              <span class="titulo">{title}</span>
+              <span class="fuente">TikTok · Instagram</span>
+            </span>
+          </div>
+        )}
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .embed {
+    width: 100%;
+  }
+
+  .columna {
+    max-width: 325px;
+    margin: 0 auto;
+  }
+
+  .columna.ancha {
+    max-width: 340px;
+  }
+
+  .marco {
+    position: relative;
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(27, 31, 59, 0.12);
+  }
+
+  .marco.youtube {
+    padding-top: 56.25%;
+    background: var(--tinta);
+  }
+
+  .marco.vertical {
+    padding-top: 170%;
+    background: #000;
+  }
+
+  .marco.instagram {
+    height: 640px;
+    background: var(--papel);
+    border: 1px solid var(--arena);
+  }
+
+  .marco iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .tarjeta {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding-top: 170%;
+    border-radius: 16px;
+    overflow: hidden;
+    background: linear-gradient(160deg, var(--tinta), var(--violeta-osc));
+    box-shadow: 0 10px 30px rgba(27, 31, 59, 0.18);
+    text-decoration: none;
+  }
+
+  .simbolos {
+    position: absolute;
+    inset: 0;
+    opacity: 0.14;
+    font-family: var(--serif);
+    color: var(--papel);
+  }
+
+  .simbolos span {
+    position: absolute;
+  }
+
+  .simbolos span:nth-child(1) {
+    top: 10%;
+    left: 12%;
+    font-size: 34px;
+    font-style: italic;
+  }
+
+  .simbolos span:nth-child(2) {
+    bottom: 14%;
+    right: 14%;
+    font-size: 40px;
+  }
+
+  .simbolos span:nth-child(3) {
+    top: 44%;
+    left: 60%;
+    font-size: 30px;
+    font-style: italic;
+  }
+
+  .centro {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    color: var(--papel);
+    text-align: center;
+    padding: 24px;
+  }
+
+  .play {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(253, 251, 247, 0.16);
+    border: 2px solid rgba(253, 251, 247, 0.5);
+    font-size: 24px;
+    padding-left: 4px;
+  }
+
+  .titulo {
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    background: var(--papel);
+    color: var(--tinta);
+    font-weight: 700;
+    font-size: 13px;
+    border-radius: 999px;
+  }
+
+  .fuente {
+    font-family: ui-monospace, monospace;
+    font-size: 12px;
+    color: var(--lila);
+  }
+</style>

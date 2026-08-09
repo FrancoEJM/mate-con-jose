@@ -1,0 +1,288 @@
+---
+import { sitio, navegacion, waAgendar } from '../data/sitio';
+
+interface Props {
+  /** En el artículo la nav es simple: logo + volver a videos. */
+  variante?: 'completa' | 'simple';
+}
+
+const { variante = 'completa' } = Astro.props;
+---
+
+<nav id="nav">
+  <div class="barra">
+    <a class="marca" href={variante === 'completa' ? '#inicio' : '/'}>
+      <img src="/assets/logo.png" alt={`Logo ${sitio.nombre}`} width="48" height="48" />
+      <span>{sitio.nombre}</span>
+    </a>
+
+    {
+      variante === 'completa' ? (
+        <>
+          <div class="links-escritorio">
+            {navegacion.map((l) => (
+              <a href={l.href}>{l.label}</a>
+            ))}
+            <a class="btn btn-primario btn-nav" href={waAgendar} target="_blank" rel="noopener">
+              Agendar clase
+            </a>
+          </div>
+
+          <button class="hamburguesa" aria-label="Abrir menú" aria-controls="drawer" data-abrir-drawer>
+            <span />
+            <span />
+            <span />
+          </button>
+        </>
+      ) : (
+        <a class="volver" href="/#videos">
+          ← Volver a videos
+        </a>
+      )
+    }
+  </div>
+</nav>
+
+{
+  variante === 'completa' && (
+    <dialog id="drawer" aria-label="Menú de navegación">
+      <div class="drawer-head">
+        <span class="script">{sitio.nombre}</span>
+        <button aria-label="Cerrar menú" data-cerrar>
+          ×
+        </button>
+      </div>
+      {navegacion.map((l) => (
+        <a href={l.href} data-cerrar>
+          {l.label}
+        </a>
+      ))}
+      <a
+        class="btn btn-primario"
+        href={waAgendar}
+        target="_blank"
+        rel="noopener"
+        data-cerrar
+      >
+        Agendar clase
+      </a>
+    </dialog>
+  )
+}
+
+<style>
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--crema);
+    border-bottom: 1px solid transparent;
+    transition:
+      background 0.3s ease,
+      box-shadow 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  /* La clase la pone el script al pasar los 20px de scroll. */
+  nav.scrolled {
+    background: rgba(245, 239, 230, 0.82);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    border-bottom-color: rgba(227, 218, 201, 0.9);
+    box-shadow: 0 4px 20px rgba(27, 31, 59, 0.06);
+  }
+
+  .barra {
+    max-width: var(--ancho);
+    margin: 0 auto;
+    padding: 10px var(--gutter);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .marca {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--tinta);
+  }
+
+  .marca img {
+    width: clamp(38px, 9vw, 48px);
+    height: clamp(38px, 9vw, 48px);
+    flex: 0 0 auto;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(27, 31, 59, 0.12);
+  }
+
+  .marca span {
+    font-family: var(--script);
+    font-weight: 700;
+    font-size: clamp(20px, 5.5vw, 27px);
+    color: var(--tinta);
+    line-height: 1;
+  }
+
+  .links-escritorio {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .links-escritorio a {
+    padding: 8px 12px;
+    color: var(--tinta);
+    font-weight: 500;
+    font-size: 15px;
+    border-radius: 10px;
+  }
+
+  .links-escritorio a:hover {
+    color: var(--violeta-osc);
+  }
+
+  .btn-nav {
+    margin-left: 6px;
+    padding: 11px 20px;
+    font-size: 15px;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(139, 124, 200, 0.35);
+  }
+
+  .btn-nav:hover {
+    color: var(--papel);
+  }
+
+  .volver {
+    padding: 10px 18px;
+    border: 1px solid var(--lila);
+    border-radius: 12px;
+    color: var(--violeta-osc);
+    font-weight: 600;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+
+  .volver:hover {
+    background: var(--violeta);
+    color: var(--papel);
+  }
+
+  .hamburguesa {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 46px;
+    height: 46px;
+    padding: 12px;
+    background: var(--papel);
+    border: 1px solid var(--lila);
+    border-radius: 12px;
+    cursor: pointer;
+  }
+
+  .hamburguesa span {
+    display: block;
+    height: 2px;
+    background: var(--tinta);
+    border-radius: 2px;
+  }
+
+  /* Drawer: hoja lateral derecha */
+  #drawer {
+    margin: 0 0 0 auto;
+    height: 100%;
+    max-height: 100dvh;
+    width: min(80vw, 320px);
+    background: var(--papel);
+    box-shadow: -12px 0 40px rgba(27, 31, 59, 0.2);
+    padding: 24px;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  #drawer[open] {
+    display: flex;
+  }
+
+  #drawer::backdrop {
+    background: rgba(27, 31, 59, 0.4);
+    backdrop-filter: blur(2px);
+  }
+
+  .drawer-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .drawer-head .script {
+    font-family: var(--script);
+    font-weight: 700;
+    font-size: 26px;
+  }
+
+  .drawer-head button {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--lila);
+    background: var(--crema);
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--tinta);
+  }
+
+  #drawer a:not(.btn) {
+    padding: 14px 12px;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 17px;
+    color: var(--tinta);
+  }
+
+  #drawer .btn {
+    margin-top: 12px;
+    padding: 14px;
+  }
+
+  @media (max-width: 860px) {
+    .links-escritorio {
+      display: none;
+    }
+
+    .hamburguesa {
+      display: inline-flex;
+    }
+  }
+</style>
+
+<script>
+  const nav = document.getElementById('nav')!;
+  const marcarScroll = () => nav.classList.toggle('scrolled', window.scrollY > 20);
+  marcarScroll();
+  window.addEventListener('scroll', marcarScroll, { passive: true });
+
+  const drawer = document.getElementById('drawer') as HTMLDialogElement | null;
+  if (drawer) {
+    document
+      .querySelector('[data-abrir-drawer]')
+      ?.addEventListener('click', () => drawer.showModal());
+    drawer.querySelectorAll('[data-cerrar]').forEach((el) =>
+      el.addEventListener('click', () => drawer.close())
+    );
+    // Clic en el backdrop: el target es el propio <dialog>.
+    drawer.addEventListener('click', (e) => {
+      if (e.target === drawer) drawer.close();
+    });
+    // Volver a escritorio con el menú abierto lo dejaría atrapado.
+    matchMedia('(min-width: 861px)').addEventListener('change', (e) => {
+      if (e.matches) drawer.close();
+    });
+  }
+</script>

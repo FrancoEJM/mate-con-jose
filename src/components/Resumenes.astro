@@ -1,0 +1,194 @@
+---
+import { resumenes } from '../data/resumenes';
+---
+
+<section id="resumenes" class="banda">
+  <div class="interior">
+    <div class="seccion-intro" data-reveal>
+      <h2 class="seccion-titulo">Resúmenes visuales</h2>
+      <p>
+        Fórmulas y propiedades clave en una imagen, listas para guardar. Los mismos que comparto en
+        Instagram y TikTok.
+      </p>
+    </div>
+
+    <div class="grid" data-reveal>
+      {
+        resumenes.map((r) => (
+          <figure>
+            <button
+              type="button"
+              class="ampliar"
+              aria-label={`Ampliar ${r.title}`}
+              data-src={r.src}
+              data-alt={r.alt}
+              data-download={r.download}
+            >
+              <img src={r.src} alt={r.alt} loading="lazy" />
+            </button>
+            <figcaption>
+              <span>{r.title}</span>
+              <a href={r.src} download={r.download} aria-label={`Descargar ${r.title}`}>
+                ↓ Descargar
+              </a>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<dialog id="lightbox" aria-label="Resumen ampliado">
+  <img id="lightbox-img" src="" alt="" />
+  <div class="acciones">
+    <a class="btn btn-primario" id="lightbox-descargar" href="#" download>↓ Descargar</a>
+    <button type="button" class="btn cerrar" data-cerrar>Cerrar</button>
+  </div>
+</dialog>
+
+<style>
+  .interior {
+    max-width: var(--ancho);
+    margin: 0 auto;
+    padding: clamp(40px, 6vw, 72px) var(--gutter);
+  }
+
+  .seccion-intro {
+    margin-bottom: 40px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 24px;
+  }
+
+  figure {
+    margin: 0;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 16px 38px rgba(27, 31, 59, 0.14);
+    background: var(--crema);
+  }
+
+  .ampliar {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: zoom-in;
+  }
+
+  .ampliar img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  figcaption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 16px;
+    background: linear-gradient(to top, rgba(27, 31, 59, 0.92), rgba(27, 31, 59, 0));
+    pointer-events: none;
+  }
+
+  figcaption span {
+    color: var(--papel);
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  figcaption a {
+    pointer-events: auto;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 15px;
+    background: var(--violeta);
+    color: var(--papel);
+    font-weight: 600;
+    font-size: 13px;
+    border-radius: 999px;
+  }
+
+  figcaption a:hover {
+    background: var(--violeta-osc);
+    color: var(--papel);
+  }
+
+  /* Lightbox */
+  #lightbox {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: clamp(14px, 4vw, 24px);
+  }
+
+  #lightbox[open] {
+    display: flex;
+  }
+
+  #lightbox img {
+    max-width: min(92vw, 560px);
+    max-height: 78vh;
+    width: auto;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  }
+
+  #lightbox .acciones {
+    display: flex;
+    gap: 12px;
+  }
+
+  #lightbox .btn {
+    padding: 12px 24px;
+    font-size: 15px;
+    border-radius: 12px;
+  }
+
+  .cerrar {
+    background: rgba(253, 251, 247, 0.16);
+    color: var(--papel);
+    border: 1px solid rgba(253, 251, 247, 0.4);
+  }
+</style>
+
+<script>
+  const dlg = document.getElementById('lightbox') as HTMLDialogElement;
+  const img = document.getElementById('lightbox-img') as HTMLImageElement;
+  const descargar = document.getElementById('lightbox-descargar') as HTMLAnchorElement;
+
+  document.querySelectorAll<HTMLElement>('.ampliar').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      img.src = btn.dataset.src!;
+      img.alt = btn.dataset.alt!;
+      descargar.href = btn.dataset.src!;
+      descargar.download = btn.dataset.download!;
+      dlg.showModal();
+    });
+  });
+
+  dlg.querySelector('[data-cerrar]')!.addEventListener('click', () => dlg.close());
+  // El diálogo cubre todo el viewport: cualquier clic que no sea sobre la imagen o los botones cierra.
+  dlg.addEventListener('click', (e) => {
+    if (e.target === dlg) dlg.close();
+  });
+</script>

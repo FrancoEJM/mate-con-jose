@@ -1,0 +1,315 @@
+---
+import { sitio, waAgendar, wa } from '../data/sitio';
+import { clase, nivelacion, clp } from '../data/programas';
+import Programas from './Programas.astro';
+---
+
+<section id="servicios">
+  <div class="seccion-intro" data-reveal>
+    <h2 class="seccion-titulo">Servicios</h2>
+  </div>
+
+  <h3 class="subtitulo" data-reveal><span aria-hidden="true"></span>Clases particulares</h3>
+
+  <div class="grid-clases">
+    <div class="card" data-reveal>
+      <div class="card-head">
+        <h4>Clase particular</h4>
+        <span class="pastilla">1 hora</span>
+      </div>
+      <p class="card-desc">Ideal para dudas puntuales y reforzar antes de una prueba.</p>
+      <p class="precio">
+        <span class="monto">{clp(clase.precio)}</span><span class="unidad">/ clase · 1h</span>
+      </p>
+      <ul class="checklist">
+        {clase.incluye.map((i) => <li>{i}</li>)}
+      </ul>
+      <a class="btn btn-borde cta" href={waAgendar} target="_blank" rel="noopener">
+        Reservar clase
+      </a>
+    </div>
+
+    <div class="card" data-reveal id="nivelacion">
+      <div class="card-head">
+        <h4>Pack de nivelación</h4>
+        <span class="pastilla"><span data-nivel-n>{nivelacion.inicial}</span> clases</span>
+      </div>
+      <p class="card-desc">
+        Para quienes vienen con una base débil y necesitan ordenar desde los cimientos. Elige cuántas
+        clases necesitas.
+      </p>
+
+      <div class="contador">
+        <button
+          type="button"
+          data-nivel-dec
+          aria-label="Menos clases"
+          aria-controls="nivel-cantidad">−</button
+        >
+        <div class="cantidad">
+          <output id="nivel-cantidad" data-nivel-n>{nivelacion.inicial}</output>
+          <span>clases</span>
+        </div>
+        <button
+          type="button"
+          data-nivel-inc
+          aria-label="Más clases"
+          aria-controls="nivel-cantidad">+</button
+        >
+        <div class="total">
+          <strong data-nivel-total>{clp(nivelacion.inicial * nivelacion.precioPorClase)}</strong>
+          <span>total</span>
+        </div>
+      </div>
+
+      <p class="nota">
+        ≈ {clp(nivelacion.precioPorClase)} por clase · valor referencial, se ajusta según diagnóstico.
+      </p>
+
+      <ul class="checklist">
+        {nivelacion.incluye.map((i) => <li>{i}</li>)}
+      </ul>
+
+      <a
+        class="btn btn-borde cta"
+        data-nivel-wa
+        href={wa(
+          `¡Hola Josefina! Me interesa un pack de nivelación de ${nivelacion.inicial} clases.`
+        )}
+        target="_blank"
+        rel="noopener"
+      >
+        Solicitar <span data-nivel-n>{nivelacion.inicial}</span> clases
+      </a>
+    </div>
+  </div>
+
+  <div class="agenda" data-reveal>
+    <div class="agenda-head">
+      <h4>Agenda tu clase particular</h4>
+      <p>Elige el día y la hora que mejor te acomoden.</p>
+    </div>
+    <div class="calendly-inline-widget" data-url={sitio.calendly}></div>
+    <noscript>
+      <p class="sin-js">Agenda tu clase en <a href={sitio.calendly}>{sitio.calendly}</a></p>
+    </noscript>
+  </div>
+
+  <Programas />
+</section>
+
+<link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css" />
+<script is:inline async src="https://assets.calendly.com/assets/external/widget.js"></script>
+
+<style>
+  section {
+    max-width: var(--ancho);
+    margin: 0 auto;
+    padding: clamp(32px, 6vw, 72px) var(--gutter);
+  }
+
+  .seccion-intro {
+    margin-bottom: 44px;
+  }
+
+  .seccion-titulo {
+    font-size: clamp(2.3rem, 4.8vw, 3.3rem);
+    margin: 0;
+  }
+
+  .subtitulo {
+    margin: 0 0 20px;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--tinta);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .subtitulo span {
+    width: 34px;
+    height: 2px;
+    background: var(--violeta);
+    flex: 0 0 auto;
+  }
+
+  .grid-clases {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 24px;
+    margin-bottom: 56px;
+  }
+
+  .card-desc {
+    margin: 6px 0 18px;
+  }
+
+  .precio {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin: 0 0 22px;
+  }
+
+  .monto {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 2.6rem;
+    color: var(--tinta);
+  }
+
+  .unidad {
+    color: var(--violeta);
+    font-weight: 600;
+  }
+
+  .cta {
+    margin-top: auto;
+    padding: 13px;
+    font-size: 15px;
+    border-radius: 12px;
+  }
+
+  .contador {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+
+  .contador > button {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 auto;
+    border: 1px solid var(--lila-borde);
+    background: var(--lila-fondo);
+    color: var(--violeta-osc);
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .contador > button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .cantidad {
+    text-align: center;
+    min-width: 60px;
+  }
+
+  .cantidad output {
+    display: block;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 2rem;
+    color: var(--tinta);
+    line-height: 1;
+  }
+
+  .cantidad span,
+  .total span {
+    display: block;
+    color: var(--violeta);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .total {
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .total strong {
+    display: block;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: var(--tinta);
+    line-height: 1;
+  }
+
+  .nota {
+    margin: 0 0 20px;
+    color: var(--texto-tenue);
+    font-size: 12px;
+  }
+
+  .agenda {
+    margin-bottom: 56px;
+    background: var(--papel);
+    border: 1px solid var(--arena);
+    border-radius: 20px;
+    box-shadow: var(--sombra-card);
+    overflow: hidden;
+  }
+
+  .agenda-head {
+    padding: clamp(18px, 4vw, 24px) clamp(18px, 4vw, 28px) 4px;
+  }
+
+  .agenda-head h4 {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--tinta);
+  }
+
+  .agenda-head p {
+    margin: 6px 0 0;
+    color: var(--texto-suave);
+    font-size: 14px;
+  }
+
+  .calendly-inline-widget {
+    min-width: 0;
+    height: clamp(640px, 92vh, 780px);
+  }
+
+  .sin-js {
+    padding: 32px;
+    text-align: center;
+    color: var(--violeta);
+  }
+</style>
+
+<script>
+  import { nivelacion, clp } from '../data/programas';
+  import { wa } from '../data/sitio';
+
+  const card = document.getElementById('nivelacion');
+  if (card) {
+    const nEls = card.querySelectorAll<HTMLElement>('[data-nivel-n]');
+    const totalEl = card.querySelector<HTMLElement>('[data-nivel-total]')!;
+    const waEl = card.querySelector<HTMLAnchorElement>('[data-nivel-wa]')!;
+    const dec = card.querySelector<HTMLButtonElement>('[data-nivel-dec]')!;
+    const inc = card.querySelector<HTMLButtonElement>('[data-nivel-inc]')!;
+
+    let n = nivelacion.inicial;
+
+    const pintar = () => {
+      nEls.forEach((el) => (el.textContent = String(n)));
+      totalEl.textContent = clp(n * nivelacion.precioPorClase);
+      waEl.href = wa(`¡Hola Josefina! Me interesa un pack de nivelación de ${n} clases.`);
+      dec.disabled = n <= nivelacion.min;
+      inc.disabled = n >= nivelacion.max;
+    };
+
+    dec.addEventListener('click', () => {
+      n = Math.max(nivelacion.min, n - 1);
+      pintar();
+    });
+    inc.addEventListener('click', () => {
+      n = Math.min(nivelacion.max, n + 1);
+      pintar();
+    });
+    pintar();
+  }
+</script>

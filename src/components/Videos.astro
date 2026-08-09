@@ -1,0 +1,335 @@
+---
+import { videos, temasPorCategoria } from '../data/videos';
+import VideoEmbed from './VideoEmbed.astro';
+
+const categorias = ['Todos', ...Object.keys(temasPorCategoria)];
+---
+
+<section id="videos">
+  <div class="seccion-intro" data-reveal>
+    <h2 class="seccion-titulo">Videos</h2>
+    <p>Mis ejercicios de TikTok e Instagram, con la explicación completa paso a paso.</p>
+  </div>
+
+  <div class="filtros" data-reveal>
+    <div class="chips" role="group" aria-label="Filtrar por categoría">
+      {
+        categorias.map((c) => (
+          <button
+            type="button"
+            class="chip"
+            data-cat={c}
+            aria-pressed={c === 'Todos' ? 'true' : 'false'}
+          >
+            {c}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="buscador">
+      <span aria-hidden="true">⌕</span>
+      <input
+        type="search"
+        id="buscar-videos"
+        placeholder="Buscar ejercicios…"
+        aria-label="Buscar ejercicios"
+      />
+    </div>
+  </div>
+
+  {
+    Object.entries(temasPorCategoria).map(([cat, temas]) => (
+      <div class="chips temas" data-temas={cat} hidden role="group" aria-label={`Temas de ${cat}`}>
+        <button type="button" class="subchip" data-topic="" aria-pressed="true">
+          Todos
+        </button>
+        {temas.map((t) => (
+          <button type="button" class="subchip" data-topic={t} aria-pressed="false">
+            {t}
+          </button>
+        ))}
+      </div>
+    ))
+  }
+
+  <div class="carrusel" id="lista-videos" data-auto-scroll>
+    {
+      videos.map((v) => (
+        <article data-cat={v.category} data-topic={v.topic} data-title={v.title.toLowerCase()}>
+          <div class="cabecera">
+            <div class="tags">
+              <span>{v.category}</span>
+              <span>{v.topic}</span>
+            </div>
+            {v.href !== '#' && (
+              <a class="ver" href={v.href} aria-label={`Ver ejercicio escrito: ${v.title}`}>
+                Ver ejercicio ↗
+              </a>
+            )}
+          </div>
+          <h3>{v.title}</h3>
+          <div class="meta">
+            <span>{v.date}</span>
+            <span>·</span>
+            <span>{v.read}</span>
+          </div>
+          <VideoEmbed url={v.url} title={v.title} />
+        </article>
+      ))
+    }
+  </div>
+
+  <p id="sin-videos" hidden>No se encontraron ejercicios. Prueba con otro tema o término.</p>
+</section>
+
+<style>
+  section {
+    max-width: var(--ancho);
+    margin: 0 auto;
+    padding: clamp(40px, 6vw, 72px) var(--gutter);
+  }
+
+  .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chips.temas {
+    margin-bottom: 28px;
+    padding-left: 2px;
+  }
+
+  .chips.temas[hidden] {
+    display: none;
+  }
+
+  .chip,
+  .subchip {
+    border-radius: 999px;
+    font-family: var(--sans);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .chip {
+    padding: 9px 16px;
+    font-size: 14px;
+    border: 1px solid var(--arena);
+    background: var(--papel);
+    color: var(--tinta);
+  }
+
+  .chip[aria-pressed='true'] {
+    border-color: var(--violeta);
+    background: var(--violeta);
+    color: var(--papel);
+  }
+
+  .subchip {
+    padding: 7px 14px;
+    font-size: 13px;
+    border: 1px solid var(--arena);
+    background: transparent;
+    color: var(--texto-suave);
+  }
+
+  .subchip[aria-pressed='true'] {
+    border-color: var(--violeta-osc);
+    background: var(--lila-fondo);
+    color: var(--violeta-osc);
+  }
+
+  .buscador {
+    position: relative;
+    flex: 1 1 220px;
+    min-width: 0;
+  }
+
+  .buscador > span {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--violeta);
+  }
+
+  .buscador input {
+    width: 100%;
+    padding: 12px 16px 12px 38px;
+    background: var(--papel);
+    border: 1px solid var(--arena);
+    border-radius: 12px;
+    font-family: var(--sans);
+    font-size: 15px;
+    color: var(--tinta);
+  }
+
+  .carrusel {
+    gap: 24px;
+    padding: 4px 4px 20px;
+  }
+
+  article {
+    flex: 0 0 min(340px, 82vw);
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    background: var(--papel);
+    border: 1px solid var(--arena);
+    border-radius: 22px;
+    padding: 20px;
+    box-shadow: var(--sombra-card);
+  }
+
+  article[hidden] {
+    display: none;
+  }
+
+  .cabecera {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tags span {
+    padding: 4px 10px;
+    background: var(--lila-fondo);
+    color: var(--violeta-osc);
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 999px;
+  }
+
+  .ver {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: var(--tinta);
+    color: var(--papel);
+    font-weight: 600;
+    font-size: 13px;
+    border-radius: 999px;
+    transition: background 0.2s;
+  }
+
+  .ver:hover {
+    background: var(--violeta-osc);
+    color: var(--papel);
+  }
+
+  article h3 {
+    margin: 0 0 10px;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.25;
+    color: var(--tinta);
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--violeta);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 18px;
+  }
+
+  #sin-videos {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--violeta);
+    font-size: 17px;
+  }
+
+  #sin-videos[hidden] {
+    display: none;
+  }
+</style>
+
+<script>
+  const seccion = document.getElementById('videos')!;
+  const tarjetas = Array.from(seccion.querySelectorAll<HTMLElement>('#lista-videos article'));
+  const gruposTemas = Array.from(seccion.querySelectorAll<HTMLElement>('[data-temas]'));
+  const vacio = document.getElementById('sin-videos')!;
+  const lista = document.getElementById('lista-videos')!;
+  const buscar = document.getElementById('buscar-videos') as HTMLInputElement;
+
+  let cat = 'Todos';
+  let topic = '';
+  let q = '';
+
+  function filtrar() {
+    let visibles = 0;
+    for (const t of tarjetas) {
+      const ok =
+        (cat === 'Todos' || t.dataset.cat === cat) &&
+        (topic === '' || t.dataset.topic === topic) &&
+        (q === '' || t.dataset.title!.includes(q));
+      t.hidden = !ok;
+      if (ok) visibles++;
+    }
+    lista.hidden = visibles === 0;
+    vacio.hidden = visibles > 0;
+    lista.scrollLeft = 0;
+  }
+
+  function marcar(botones: NodeListOf<HTMLElement> | HTMLElement[], activo: HTMLElement) {
+    botones.forEach((b) => b.setAttribute('aria-pressed', String(b === activo)));
+  }
+
+  seccion.querySelectorAll<HTMLElement>('.chip').forEach((btn, _, todos) => {
+    btn.addEventListener('click', () => {
+      cat = btn.dataset.cat!;
+      topic = '';
+      marcar(todos, btn);
+      // Al cambiar de categoría se reinician los subfiltros de tema.
+      for (const g of gruposTemas) {
+        g.hidden = g.dataset.temas !== cat;
+        g.querySelectorAll<HTMLElement>('.subchip').forEach((s) =>
+          s.setAttribute('aria-pressed', String(s.dataset.topic === ''))
+        );
+      }
+      filtrar();
+    });
+  });
+
+  for (const grupo of gruposTemas) {
+    const subs = grupo.querySelectorAll<HTMLElement>('.subchip');
+    subs.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        topic = btn.dataset.topic!;
+        marcar(subs, btn);
+        filtrar();
+      });
+    });
+  }
+
+  buscar.addEventListener('input', () => {
+    q = buscar.value.trim().toLowerCase();
+    filtrar();
+  });
+</script>
