@@ -1,11 +1,9 @@
 ---
-layout: ../../layouts/Articulo.astro
-title: 'Ecuaciones cuadráticas: resolución paso a paso'
-description: 'Cómo resolver una ecuación cuadrática con la fórmula general, paso a paso y con verificación.'
+titulo: 'Ecuaciones cuadráticas: resolución paso a paso'
+descripcion: 'Cómo resolver una ecuación cuadrática con la fórmula general, paso a paso y con verificación.'
 tags: ['Álgebra', 'PAES']
-date: '8 jul 2026'
-read: '6 min de lectura'
-videoUrl: 'https://vt.tiktok.com/ZSXw8xWfn/'
+fecha: '8 jul 2026'
+duracion: '6 min de lectura'
 ---
 
 Una **ecuación cuadrática** es cualquier ecuación que se puede escribir en la forma general $ax^2 + bx + c = 0$, con $a \neq 0$. Es uno de los contenidos que más se repite en la PAES, así que vale la pena dominarlo. Veamos un ejercicio completo.

@@ -1,0 +1,23 @@
+# Cada guion "-" es un testimonio. Las comillas del principio y del final las pone la página.
+#
+#   detalle: el curso, universidad o rol de quien lo escribió.
+
+- id: valentina
+  texto: Pasé de un 480 a un 780 en M1. Jose explica con una calma que hace que todo tenga sentido.
+  nombre: Valentina R.
+  detalle: PAES 2025
+
+- id: matias
+  texto: Me salvó en Cálculo I. Las clases online son súper cómodas y siempre quedo con los apuntes.
+  nombre: Matías O.
+  detalle: U. de Chile
+
+- id: carolina
+  texto: Mi hija por fin le perdió el miedo a la matemática. Muy paciente y ordenada.
+  nombre: Carolina M.
+  detalle: Apoderada
+
+- id: ignacio
+  texto: El intensivo PAES me ordenó en las últimas semanas. Los ensayos cronometrados marcaron la diferencia.
+  nombre: Ignacio T.
+  detalle: PAES 2025

@@ -1,5 +1,10 @@
 ---
-import { resumenes } from '../data/resumenes';
+import { getCollection } from 'astro:content';
+
+const resumenes = (await getCollection('resumenes')).map((r) => ({ id: r.id, ...r.data }));
+
+/** Nombre del archivo que se descarga, a partir de la ruta de la imagen. */
+const nombreArchivo = (src: string) => src.split('/').pop()!;
 ---
 
 <section id="resumenes" class="banda">
@@ -12,23 +17,34 @@ import { resumenes } from '../data/resumenes';
       </p>
     </div>
 
-    <div class="grid" data-reveal>
+    <div class="carrusel grid">
       {
         resumenes.map((r) => (
           <figure>
             <button
               type="button"
               class="ampliar"
-              aria-label={`Ampliar ${r.title}`}
-              data-src={r.src}
-              data-alt={r.alt}
-              data-download={r.download}
+              aria-label={
+                r.imagenes.length > 1
+                  ? `Ampliar ${r.titulo} (${r.imagenes.length} imágenes)`
+                  : `Ampliar ${r.titulo}`
+              }
+              data-abrir-resumen={r.id}
             >
-              <img src={r.src} alt={r.alt} loading="lazy" />
+              <img src={r.imagenes[0].src} alt={r.imagenes[0].alt} loading="lazy" />
+              {r.imagenes.length > 1 && (
+                <span class="contador-grid">
+                  <span aria-hidden="true">▣</span> {r.imagenes.length}
+                </span>
+              )}
             </button>
             <figcaption>
-              <span>{r.title}</span>
-              <a href={r.src} download={r.download} aria-label={`Descargar ${r.title}`}>
+              <span>{r.titulo}</span>
+              <a
+                href={r.imagenes[0].src}
+                download={nombreArchivo(r.imagenes[0].src)}
+                aria-label={`Descargar ${r.titulo}`}
+              >
                 ↓ Descargar
               </a>
             </figcaption>
@@ -39,13 +55,40 @@ import { resumenes } from '../data/resumenes';
   </div>
 </section>
 
-<dialog id="lightbox" aria-label="Resumen ampliado">
-  <img id="lightbox-img" src="" alt="" />
-  <div class="acciones">
-    <a class="btn btn-primario" id="lightbox-descargar" href="#" download>↓ Descargar</a>
-    <button type="button" class="btn cerrar" data-cerrar>Cerrar</button>
-  </div>
-</dialog>
+{
+  resumenes.map((r) => (
+    <dialog id={`resumen-${r.id}`} class="visor" aria-label={r.titulo}>
+      <div class="tira carrusel" data-tira>
+        {r.imagenes.map((img) => (
+          <img src={img.src} alt={img.alt} data-descarga={nombreArchivo(img.src)} loading="lazy" />
+        ))}
+      </div>
+
+      {r.imagenes.length > 1 && (
+        <div class="paginacion">
+          <button type="button" class="flecha" data-prev aria-label="Imagen anterior">
+            ‹
+          </button>
+          <span class="indice" aria-live="polite">
+            <span data-actual>1</span> / {r.imagenes.length}
+          </span>
+          <button type="button" class="flecha" data-next aria-label="Imagen siguiente">
+            ›
+          </button>
+        </div>
+      )}
+
+      <div class="acciones">
+        <a class="btn btn-primario" data-descargar href={r.imagenes[0].src} download>
+          ↓ Descargar
+        </a>
+        <button type="button" class="btn cerrar" data-cerrar>
+          Cerrar
+        </button>
+      </div>
+    </dialog>
+  ))
+}
 
 <style>
   .interior {
@@ -59,13 +102,15 @@ import { resumenes } from '../data/resumenes';
   }
 
   .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
     gap: 24px;
+    padding: 4px 4px 20px;
+    align-items: start;
   }
 
   figure {
     margin: 0;
+    flex: 0 0 min(320px, 78%);
+    scroll-snap-align: center;
     position: relative;
     border-radius: 20px;
     overflow: hidden;
@@ -86,6 +131,23 @@ import { resumenes } from '../data/resumenes';
     display: block;
     width: 100%;
     height: auto;
+  }
+
+  /* Marca de "hay más de una imagen", como en Instagram. */
+  .contador-grid {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 11px;
+    background: rgba(27, 31, 59, 0.72);
+    color: var(--papel);
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 999px;
+    backdrop-filter: blur(4px);
   }
 
   figcaption {
@@ -127,8 +189,8 @@ import { resumenes } from '../data/resumenes';
     color: var(--papel);
   }
 
-  /* Lightbox */
-  #lightbox {
+  /* Visor ampliado */
+  .visor {
     width: 100%;
     max-width: none;
     height: 100%;
@@ -136,29 +198,72 @@ import { resumenes } from '../data/resumenes';
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 18px;
+    gap: 14px;
     padding: clamp(14px, 4vw, 24px);
   }
 
-  #lightbox[open] {
+  .visor[open] {
     display: flex;
   }
 
-  #lightbox img {
-    max-width: min(92vw, 560px);
-    max-height: 78vh;
-    width: auto;
-    height: auto;
+  .tira {
+    width: min(92vw, 560px);
+    gap: 12px;
+    border-radius: 16px;
+  }
+
+  .tira img {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+    width: 100%;
+    max-height: 72vh;
+    object-fit: contain;
     border-radius: 16px;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
   }
 
-  #lightbox .acciones {
+  .paginacion {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .flecha {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(253, 251, 247, 0.4);
+    background: rgba(253, 251, 247, 0.16);
+    color: var(--papel);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .flecha:hover:not(:disabled) {
+    background: rgba(253, 251, 247, 0.3);
+  }
+
+  .flecha:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .indice {
+    color: var(--papel);
+    font-weight: 600;
+    font-size: 15px;
+    min-width: 56px;
+    text-align: center;
+  }
+
+  .acciones {
     display: flex;
     gap: 12px;
   }
 
-  #lightbox .btn {
+  .acciones .btn {
     padding: 12px 24px;
     font-size: 15px;
     border-radius: 12px;
@@ -169,26 +274,79 @@ import { resumenes } from '../data/resumenes';
     color: var(--papel);
     border: 1px solid rgba(253, 251, 247, 0.4);
   }
+
+  .cerrar:hover {
+    background: var(--rojo-fondo);
+    border-color: var(--rojo-borde);
+    color: var(--rojo-texto);
+  }
 </style>
 
 <script>
-  const dlg = document.getElementById('lightbox') as HTMLDialogElement;
-  const img = document.getElementById('lightbox-img') as HTMLImageElement;
-  const descargar = document.getElementById('lightbox-descargar') as HTMLAnchorElement;
+  document.querySelectorAll<HTMLElement>('[data-abrir-resumen]').forEach((btn) => {
+    const dlg = document.getElementById(
+      `resumen-${btn.dataset.abrirResumen}`
+    ) as HTMLDialogElement | null;
+    if (!dlg) return;
 
-  document.querySelectorAll<HTMLElement>('.ampliar').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      img.src = btn.dataset.src!;
-      img.alt = btn.dataset.alt!;
-      descargar.href = btn.dataset.src!;
-      descargar.download = btn.dataset.download!;
-      dlg.showModal();
+    const tira = dlg.querySelector<HTMLElement>('[data-tira]')!;
+    const imgs = Array.from(tira.querySelectorAll('img'));
+    const descargar = dlg.querySelector<HTMLAnchorElement>('[data-descargar]')!;
+    const actual = dlg.querySelector<HTMLElement>('[data-actual]');
+    const prev = dlg.querySelector<HTMLButtonElement>('[data-prev]');
+    const next = dlg.querySelector<HTMLButtonElement>('[data-next]');
+
+    /** Posición de cada imagen dentro de la tira, contando el gap entre ellas. */
+    const inicioDe = (img: HTMLImageElement) => img.offsetLeft - imgs[0].offsetLeft;
+
+    /** Cuál se está viendo: la imagen cuyo inicio queda más cerca del scroll actual. */
+    const indiceVisible = () => {
+      let mejor = 0;
+      for (let i = 1; i < imgs.length; i++) {
+        if (Math.abs(inicioDe(imgs[i]) - tira.scrollLeft) < Math.abs(inicioDe(imgs[mejor]) - tira.scrollLeft)) {
+          mejor = i;
+        }
+      }
+      return mejor;
+    };
+
+    const pintar = (i: number) => {
+      descargar.href = imgs[i].src;
+      descargar.download = imgs[i].dataset.descarga!;
+      if (actual) actual.textContent = String(i + 1);
+      if (prev) prev.disabled = i === 0;
+      if (next) next.disabled = i === imgs.length - 1;
+    };
+
+    const ir = (paso: number) => {
+      const i = Math.min(imgs.length - 1, Math.max(0, indiceVisible() + paso));
+      tira.scrollTo({ left: inicioDe(imgs[i]), behavior: 'smooth' });
+      // No se espera al evento de scroll: el indicador responde al toque de inmediato.
+      pintar(i);
+    };
+
+    // Para el deslizamiento con el dedo o el trackpad, donde no hay botón que avisar.
+    tira.addEventListener('scroll', () => pintar(indiceVisible()), { passive: true });
+    prev?.addEventListener('click', () => ir(-1));
+    next?.addEventListener('click', () => ir(1));
+
+    dlg.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') ir(-1);
+      if (e.key === 'ArrowRight') ir(1);
     });
-  });
 
-  dlg.querySelector('[data-cerrar]')!.addEventListener('click', () => dlg.close());
-  // El diálogo cubre todo el viewport: cualquier clic que no sea sobre la imagen o los botones cierra.
-  dlg.addEventListener('click', (e) => {
-    if (e.target === dlg) dlg.close();
+    btn.addEventListener('click', () => {
+      // Dentro de un <dialog> cerrado las imágenes lazy nunca se descargan, así que
+      // la tira no sería desplazable hasta que carguen. Al abrir se fuerzan.
+      imgs.forEach((img) => (img.loading = 'eager'));
+      dlg.showModal();
+      tira.scrollLeft = 0;
+      pintar(0);
+    });
+
+    dlg.querySelector('[data-cerrar]')!.addEventListener('click', () => dlg.close());
+    dlg.addEventListener('click', (e) => {
+      if (e.target === dlg) dlg.close();
+    });
   });
 </script>

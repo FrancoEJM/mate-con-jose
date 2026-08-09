@@ -1,0 +1,76 @@
+# Los programas largos que se muestran en la sección Servicios.
+# El orden de esta lista es el orden en que aparecen las tarjetas.
+#
+#   destacado: true      pinta la tarjeta oscura con la cinta "Más elegido". Solo uno.
+#   pdf:                 archivo dentro de public/pdf/, escrito como /pdf/nombre.pdf
+#   incluye:             lista larga que reemplaza a los bullets dentro del modal.
+#   plan / valores:      opcionales; si no están, el modal muestra solo los bullets.
+
+- id: intensivo
+  titulo: Intensivo PAES
+  duracion: 12 semanas
+  resumen: Ritmo acelerado para quienes parten con menos tiempo.
+  descripcion: Preparación acelerada para quienes parten con menos tiempo, enfocada en los contenidos de mayor impacto.
+  bullets:
+    - Contenidos priorizados por impacto
+    - Ensayos cronometrados
+    - Técnicas de resolución rápida
+    - Cobertura M1 y M2
+
+- id: rutapaes
+  titulo: Ruta PAES · M1
+  duracion: 18 semanas
+  destacado: true
+  resumen: Preparación completa y progresiva de principio a fin.
+  descripcion: Preparación completa y progresiva para la PAES Competencia Matemática M1, combinando teoría, práctica y estrategias de resolución.
+  pdf: /pdf/programa-ruta-m1.pdf
+  bullets:
+    - Cobertura total del temario PAES
+    - Plan de estudio semana a semana
+    - Ensayos y seguimiento de avance
+    - Soporte por WhatsApp
+  incluye:
+    - Clase de diagnóstico personalizada
+    - 18 clases en vivo (1 semanal de 1h 15min)
+    - 18 resúmenes teóricos, uno por semana
+    - 18 guías de ejercicios tipo PAES
+    - Formularios con fórmulas y conceptos clave
+    - Videos de resolución paso a paso
+    - 2 ensayos tipo PAES (semana 1 y 18)
+    - Estrategias para enfrentar la PAES
+    - Seguimiento de dudas por WhatsApp
+    - Planificación semanal organizada
+  plan:
+    - eje: Números
+      semanas: 4
+    - eje: Álgebra
+      semanas: 4
+    - eje: Funciones
+      semanas: 3
+    - eje: Geometría
+      semanas: 5
+    - eje: Probabilidad y estadística
+      semanas: 2
+  valoresNota: duración 5 meses
+  valores:
+    - etiqueta: Pago mensual
+      monto: 5 × $35.990
+      detalle: Total $179.950 · el 1° de cada mes
+    - etiqueta: 3 cuotas
+      monto: 3 × $55.990
+      detalle: Total $167.970 · semanas 1, 5 y 10
+    - etiqueta: Pago único
+      monto: $159.990
+      detalle: El más conveniente
+      destacado: true
+
+- id: stem
+  titulo: Ruta STEM
+  duracion: M1 y M2
+  resumen: 'Para carreras STEM: Ciencia, Tecnología, Ingeniería y Matemática.'
+  descripcion: 'Para carreras STEM (Ciencia, Tecnología, Ingeniería y Matemática): profundidad en Matemática M1 y M2.'
+  bullets:
+    - Enfoque en Matemática M1 y M2
+    - Profundidad para ingenierías y ciencias
+    - Pensamiento matemático aplicado
+    - Puente hacia la universidad

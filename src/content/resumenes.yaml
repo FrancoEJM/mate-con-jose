@@ -1,0 +1,14 @@
+# Cada guion "-" es un resumen visual.
+#
+# Un resumen puede tener varias imágenes: en la grilla se ve la primera y, al pincharla,
+# se abren todas como un carrusel que se desliza hacia el lado (igual que en Instagram).
+# Para eso agrega más bloques "- src: ... / alt: ..." bajo "imagenes".
+#
+# Las imágenes van en public/img/resumenes/ y acá se escriben con la ruta /img/resumenes/...
+# El "alt" es la descripción para quien no puede ver la imagen: escribe de qué se trata.
+
+- id: potencias
+  titulo: Propiedades de potencias
+  imagenes:
+    - src: /img/resumenes/potencias-1.jpg
+      alt: 'Resumen visual: propiedades de potencias'

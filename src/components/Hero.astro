@@ -1,24 +1,28 @@
 ---
-import { sitio, waAgendar } from '../data/sitio';
+import { sitio, waAgendar } from "../data/sitio";
 
-const insignias = ['+500 estudiantes', 'PAES · Universidad', 'Online y presencial'];
+const insignias = [
+  "2 años enseñando",
+  "PAES · Universidad",
+  "Online y presencial",
+];
 ---
 
 <section id="inicio">
   <div class="grid">
     <div id="sobre-mi" class="texto" data-reveal>
-      <p class="kicker">Clases particulares de matemática · Chile</p>
       <h1>
         Matemática que <span>de verdad</span> se entiende.
       </h1>
       <p class="intro">
-        Hola 💜 Soy <strong>{sitio.autora}</strong>, estudiante de Licenciatura en Ciencias con
-        mención en Matemáticas (UACh). Enseñar es lo que más disfruto: te ayudo a entender el <em
-          >porqué</em
-        > de las cosas, no solo a memorizar fórmulas.
+        Hola 💜 Soy <strong>{sitio.autora}</strong>, estudiante de Licenciatura
+        en Ciencias con mención en Matemáticas (UACh). Enseñar es lo que más
+        disfruto: te ayudo a entender el <em>porqué</em> de las cosas, no solo a memorizar
+        fórmulas.
       </p>
       <p class="sub">
-        Aquí encontrarás mis <strong>clases y programas</strong> de preparación PAES y universidad,
+        Aquí encontrarás mis <strong>clases y programas</strong> de preparación PAES
+        y universidad,
         <strong>videos</strong> con ejercicios resueltos paso a paso y <strong
           >resúmenes visuales</strong
         > para estudiar.
@@ -38,7 +42,12 @@ const insignias = ['+500 estudiantes', 'PAES · Universidad', 'Online y presenci
       </div>
 
       <div class="acciones">
-        <a class="btn btn-primario" href={waAgendar} target="_blank" rel="noopener">
+        <a
+          class="btn btn-primario"
+          href={waAgendar}
+          target="_blank"
+          rel="noopener"
+        >
           Agendar por WhatsApp →
         </a>
         <a class="btn btn-borde" href="#servicios">Ver servicios</a>
@@ -49,8 +58,8 @@ const insignias = ['+500 estudiantes', 'PAES · Universidad', 'Online y presenci
       <div class="marco">
         <div class="anillo" aria-hidden="true"></div>
         <img
-          src="/assets/logo.png"
-          alt="Logo de Mate con José: matemáticas para PAES y universidad"
+          src="/img/sitio/logo.png"
+          alt="Logo de Mate con Jose: matemáticas para PAES y universidad"
           width="420"
           height="420"
         />
@@ -184,5 +193,12 @@ const insignias = ['+500 estudiantes', 'PAES · Universidad', 'Online y presenci
     height: auto;
     border-radius: 50%;
     box-shadow: 0 24px 60px rgba(27, 31, 59, 0.16);
+  }
+
+  /* En móvil el logo ya está en la barra superior: repetirlo solo alarga el scroll. */
+  @media (max-width: 860px) {
+    .retrato {
+      display: none;
+    }
   }
 </style>

@@ -1,18 +1,28 @@
 ---
-import { waAgendar } from '../data/sitio';
-import { programas, coloresPlan } from '../data/programas';
+import { getCollection } from 'astro:content';
+import { wa } from '../data/sitio';
+import { coloresPlan } from '../data/precios';
+
+const programas = (await getCollection('programas')).map((p) => ({
+  id: p.id,
+  ...p.data,
+  /** Mensaje distinto por programa, para que ella sepa cuál le escriben. */
+  wa: wa(`¡Hola Josefina! Quiero acceder al programa ${p.data.titulo}.`),
+}));
+
+const destacado = programas.findIndex((p) => p.destacado);
 ---
 
 <h3 class="subtitulo" data-reveal><span aria-hidden="true"></span>Programas</h3>
 
-<div class="grid-programas">
+<div class="carrusel programas" data-centrar-en={destacado >= 0 ? destacado : 0}>
   {
     programas.map((p) => (
-      <div class:list={['card', { destacado: p.destacado }]} data-reveal>
+      <div class:list={['card', { destacado: p.destacado }]}>
         {p.destacado && <span class="cinta">Más elegido</span>}
         <div class="card-head">
-          <h4>{p.title}</h4>
-          <span class="pastilla">{p.weeks}</span>
+          <h4>{p.titulo}</h4>
+          <span class="pastilla">{p.duracion}</span>
         </div>
         <p class="card-desc">{p.resumen}</p>
         <ul class="checklist">
@@ -24,8 +34,8 @@ import { programas, coloresPlan } from '../data/programas';
           <button type="button" class="btn btn-suave" data-abrir={p.id}>
             Ver programación
           </button>
-          <a class="btn btn-borde cta" href={waAgendar} target="_blank" rel="noopener">
-            Postular al programa
+          <a class="btn btn-borde cta" href={p.wa} target="_blank" rel="noopener">
+            Acceder al programa
           </a>
         </div>
       </div>
@@ -37,14 +47,14 @@ import { programas, coloresPlan } from '../data/programas';
   programas.map((p) => {
     const totalSemanas = p.plan?.reduce((a, e) => a + e.semanas, 0) ?? 0;
     return (
-      <dialog id={`prog-${p.id}`} class="modal" aria-label={`Programación de ${p.title}`}>
+      <dialog id={`prog-${p.id}`} class="modal" aria-label={`Programación de ${p.titulo}`}>
         <div class="modal-head">
-          <button class="cerrar" aria-label="Cerrar" data-cerrar>
+          <button class="cerrar-x" aria-label="Cerrar" data-cerrar>
             ×
           </button>
-          <span class="pastilla oscura">{p.weeks}</span>
-          <h3>{p.title}</h3>
-          <p>{p.desc}</p>
+          <span class="pastilla oscura">{p.duracion}</span>
+          <h3>{p.titulo}</h3>
+          <p>{p.descripcion}</p>
         </div>
 
         <div class="modal-body">
@@ -70,7 +80,11 @@ import { programas, coloresPlan } from '../data/programas';
           {p.plan && (
             <>
               <h4>Planificación semanal · {totalSemanas} semanas</h4>
-              <div class="barra" role="img" aria-label={`Distribución: ${p.plan.map((e) => `${e.eje} ${e.semanas} semanas`).join(', ')}`}>
+              <div
+                class="barra"
+                role="img"
+                aria-label={`Distribución: ${p.plan.map((e) => `${e.eje} ${e.semanas} semanas`).join(', ')}`}
+              >
                 {p.plan.map((e, i) => (
                   <div style={`flex:${e.semanas};background:${coloresPlan[i % coloresPlan.length]}`} />
                 ))}
@@ -94,7 +108,7 @@ import { programas, coloresPlan } from '../data/programas';
           {p.valores && (
             <>
               <h4>
-                Valores <small>· duración 5 meses</small>
+                Valores {p.valoresNota && <small>· {p.valoresNota}</small>}
               </h4>
               <div class="valores">
                 {p.valores.map((v) => (
@@ -117,12 +131,12 @@ import { programas, coloresPlan } from '../data/programas';
 
           <div class="modal-acciones">
             {p.pdf && (
-              <a class="btn btn-primario" href={p.pdf} download={p.pdfName}>
+              <a class="btn btn-primario" href={p.pdf} download>
                 ↓ Descargar PDF
               </a>
             )}
-            <a class="btn btn-borde" href={waAgendar} target="_blank" rel="noopener">
-              Postular por WhatsApp
+            <a class="btn btn-borde" href={p.wa} target="_blank" rel="noopener">
+              Acceder por WhatsApp
             </a>
             <button type="button" class="btn btn-cerrar" data-cerrar>
               Cerrar
@@ -153,11 +167,25 @@ import { programas, coloresPlan } from '../data/programas';
     flex: 0 0 auto;
   }
 
-  .grid-programas {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-    gap: 32px 24px;
+  /* Una sola fila con scroll lateral: la tarjeta central queda enfocada y las
+     vecinas asoman por los costados. El padding-top deja sitio a la cinta. */
+  .programas {
+    gap: 24px;
+    padding: 24px 4px 20px;
     align-items: stretch;
+  }
+
+  /* El ancho en % es del carrusel, no de la pantalla: así el sobrante que dejan
+     la tarjeta central y el gap siempre alcanza para que las vecinas asomen. */
+  .programas > .card {
+    flex: 0 0 min(340px, 78%);
+    scroll-snap-align: center;
+  }
+
+  @media (max-width: 860px) {
+    .programas {
+      gap: 16px;
+    }
   }
 
   .card-head h4 {
@@ -262,7 +290,7 @@ import { programas, coloresPlan } from '../data/programas';
     color: var(--papel);
   }
 
-  .cerrar {
+  .cerrar-x {
     position: absolute;
     top: 18px;
     right: 18px;
@@ -275,6 +303,14 @@ import { programas, coloresPlan } from '../data/programas';
     font-size: 20px;
     cursor: pointer;
     line-height: 1;
+    transition:
+      background 0.2s,
+      border-color 0.2s;
+  }
+
+  .cerrar-x:hover {
+    background: rgba(220, 179, 173, 0.35);
+    border-color: var(--rojo-borde);
   }
 
   .pastilla.oscura {
@@ -452,14 +488,32 @@ import { programas, coloresPlan } from '../data/programas';
     border-radius: 12px;
   }
 
+  /* Cerrar siempre pegado al borde derecho, separado de las acciones principales. */
   .btn-cerrar {
+    margin-left: auto;
     background: none;
     border: 1px solid var(--arena);
     color: var(--texto-suave);
   }
+
+  .btn-cerrar:hover {
+    background: var(--rojo-fondo);
+    border-color: var(--rojo-borde);
+    color: var(--rojo-texto);
+  }
 </style>
 
 <script>
+  // Arrancar mostrando el programa destacado al centro, con los otros dos asomando.
+  const tira = document.querySelector<HTMLElement>('[data-centrar-en]');
+  if (tira) {
+    const i = Number(tira.dataset.centrarEn);
+    const card = tira.children[i] as HTMLElement | undefined;
+    if (card) {
+      tira.scrollLeft = card.offsetLeft - tira.offsetLeft - (tira.clientWidth - card.offsetWidth) / 2;
+    }
+  }
+
   document.querySelectorAll<HTMLElement>('[data-abrir]').forEach((btn) => {
     const dlg = document.getElementById(`prog-${btn.dataset.abrir}`) as HTMLDialogElement | null;
     if (!dlg) return;

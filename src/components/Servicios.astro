@@ -1,6 +1,6 @@
 ---
-import { sitio, waAgendar, wa } from '../data/sitio';
-import { clase, nivelacion, clp } from '../data/programas';
+import { waAgendar, wa } from '../data/sitio';
+import { clase, nivelacion, clp } from '../data/precios';
 import Programas from './Programas.astro';
 ---
 
@@ -29,7 +29,14 @@ import Programas from './Programas.astro';
       </a>
     </div>
 
-    <div class="card" data-reveal id="nivelacion">
+    <div
+      class="card"
+      data-reveal
+      id="nivelacion"
+      data-precio={nivelacion.precioPorClase}
+      data-min={nivelacion.min}
+      data-max={nivelacion.max}
+    >
       <div class="card-head">
         <h4>Pack de nivelación</h4>
         <span class="pastilla"><span data-nivel-n>{nivelacion.inicial}</span> clases</span>
@@ -84,32 +91,18 @@ import Programas from './Programas.astro';
     </div>
   </div>
 
-  <div class="agenda" data-reveal>
-    <div class="agenda-head">
-      <h4>Agenda tu clase particular</h4>
-      <p>Elige el día y la hora que mejor te acomoden.</p>
-    </div>
-    <div class="calendly-inline-widget" data-url={sitio.calendly}></div>
-    <noscript>
-      <p class="sin-js">Agenda tu clase en <a href={sitio.calendly}>{sitio.calendly}</a></p>
-    </noscript>
-  </div>
-
   <Programas />
 </section>
-
-<link rel="stylesheet" href="https://assets.calendly.com/assets/external/widget.css" />
-<script is:inline async src="https://assets.calendly.com/assets/external/widget.js"></script>
 
 <style>
   section {
     max-width: var(--ancho);
     margin: 0 auto;
-    padding: clamp(32px, 6vw, 72px) var(--gutter);
+    padding: clamp(16px, 3vw, 32px) var(--gutter) clamp(40px, 6vw, 72px);
   }
 
   .seccion-intro {
-    margin-bottom: 44px;
+    margin-bottom: 32px;
   }
 
   .seccion-titulo {
@@ -240,74 +233,40 @@ import Programas from './Programas.astro';
     color: var(--texto-tenue);
     font-size: 12px;
   }
-
-  .agenda {
-    margin-bottom: 56px;
-    background: var(--papel);
-    border: 1px solid var(--arena);
-    border-radius: 20px;
-    box-shadow: var(--sombra-card);
-    overflow: hidden;
-  }
-
-  .agenda-head {
-    padding: clamp(18px, 4vw, 24px) clamp(18px, 4vw, 28px) 4px;
-  }
-
-  .agenda-head h4 {
-    margin: 0;
-    font-family: var(--serif);
-    font-weight: 700;
-    font-size: 1.3rem;
-    color: var(--tinta);
-  }
-
-  .agenda-head p {
-    margin: 6px 0 0;
-    color: var(--texto-suave);
-    font-size: 14px;
-  }
-
-  .calendly-inline-widget {
-    min-width: 0;
-    height: clamp(640px, 92vh, 780px);
-  }
-
-  .sin-js {
-    padding: 32px;
-    text-align: center;
-    color: var(--violeta);
-  }
 </style>
 
 <script>
-  import { nivelacion, clp } from '../data/programas';
   import { wa } from '../data/sitio';
+  import { clp } from '../data/precios';
 
   const card = document.getElementById('nivelacion');
   if (card) {
+    const precio = Number(card.dataset.precio);
+    const min = Number(card.dataset.min);
+    const max = Number(card.dataset.max);
+
     const nEls = card.querySelectorAll<HTMLElement>('[data-nivel-n]');
     const totalEl = card.querySelector<HTMLElement>('[data-nivel-total]')!;
     const waEl = card.querySelector<HTMLAnchorElement>('[data-nivel-wa]')!;
     const dec = card.querySelector<HTMLButtonElement>('[data-nivel-dec]')!;
     const inc = card.querySelector<HTMLButtonElement>('[data-nivel-inc]')!;
 
-    let n = nivelacion.inicial;
+    let n = Number(totalEl.dataset.n ?? nEls[0].textContent);
 
     const pintar = () => {
       nEls.forEach((el) => (el.textContent = String(n)));
-      totalEl.textContent = clp(n * nivelacion.precioPorClase);
+      totalEl.textContent = clp(n * precio);
       waEl.href = wa(`¡Hola Josefina! Me interesa un pack de nivelación de ${n} clases.`);
-      dec.disabled = n <= nivelacion.min;
-      inc.disabled = n >= nivelacion.max;
+      dec.disabled = n <= min;
+      inc.disabled = n >= max;
     };
 
     dec.addEventListener('click', () => {
-      n = Math.max(nivelacion.min, n - 1);
+      n = Math.max(min, n - 1);
       pintar();
     });
     inc.addEventListener('click', () => {
-      n = Math.min(nivelacion.max, n + 1);
+      n = Math.min(max, n + 1);
       pintar();
     });
     pintar();

@@ -1,22 +1,23 @@
 ---
 import { sitio, waAgendar } from '../data/sitio';
+import Icono from './Icono.astro';
 
 const contactos = [
-  { icono: '✆', href: waAgendar, texto: `WhatsApp ${sitio.telefono}`, externo: true },
+  { icono: 'whatsapp', href: waAgendar, texto: `WhatsApp ${sitio.telefono}`, externo: true },
   {
-    icono: '◉',
+    icono: 'instagram',
     href: `https://instagram.com/${sitio.instagram}`,
     texto: `Instagram @${sitio.instagram}`,
     externo: true,
   },
   {
-    icono: '♪',
+    icono: 'tiktok',
     href: `https://tiktok.com/@${sitio.tiktok}`,
     texto: `TikTok @${sitio.tiktok}`,
     externo: true,
   },
-  { icono: '✉', href: `mailto:${sitio.email}`, texto: sitio.email, externo: false },
-];
+  { icono: 'correo', href: `mailto:${sitio.email}`, texto: sitio.email, externo: false },
+] as const;
 ---
 
 <footer id="contacto">
@@ -24,7 +25,7 @@ const contactos = [
     <div class="columnas">
       <div class="col-marca">
         <div class="marca">
-          <img src="/assets/logo.png" alt={`Logo ${sitio.nombre}`} width="60" height="60" />
+          <img src="/img/sitio/logo.png" alt={`Logo ${sitio.nombre}`} width="60" height="60" />
           <span>{sitio.nombre}</span>
         </div>
         <p class="lema">{sitio.descripcion}</p>
@@ -36,8 +37,8 @@ const contactos = [
                 target={c.externo ? '_blank' : undefined}
                 rel={c.externo ? 'noopener' : undefined}
               >
-                <span class="icono" aria-hidden="true">
-                  {c.icono}
+                <span class="icono">
+                  <Icono nombre={c.icono} />
                 </span>
                 {c.texto}
               </a>
@@ -50,12 +51,12 @@ const contactos = [
         <h3>Escanea y sígueme</h3>
         <div class="qrs">
           <img
-            src="/assets/qr-instagram.png"
+            src="/img/sitio/qr-instagram.png"
             alt={`Código QR de Instagram @${sitio.instagram}`}
             loading="lazy"
           />
           <img
-            src="/assets/qr-tiktok.png"
+            src="/img/sitio/qr-tiktok.png"
             alt={`Código QR de TikTok @${sitio.tiktok}`}
             loading="lazy"
           />
@@ -64,8 +65,8 @@ const contactos = [
     </div>
 
     <div class="legal">
-      <span>© {new Date().getFullYear()} {sitio.nombre} · {sitio.ciudad}</span>
-      <span>Hecho con paciencia y café ☕</span>
+      <span>© {new Date().getFullYear()} {sitio.nombre}</span>
+      <span>Hecho con cariño</span>
     </div>
   </div>
 </footer>
@@ -152,18 +153,24 @@ const contactos = [
     justify-content: center;
     background: rgba(181, 169, 218, 0.18);
     border-radius: 10px;
-    font-size: 18px;
+    transition: background 0.2s;
+  }
+
+  .contactos a:hover .icono {
+    background: rgba(181, 169, 218, 0.32);
   }
 
   .col-qr {
     flex: 0 1 auto;
   }
 
+  /* Outfit, la misma del resto del sitio: la serif desentonaba en el pie. */
   .col-qr h3 {
     margin: 0 0 18px;
-    font-family: var(--serif);
+    font-family: var(--sans);
     font-weight: 600;
-    font-size: 1.2rem;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
     color: var(--papel);
   }
 

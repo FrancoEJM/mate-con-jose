@@ -1,5 +1,7 @@
 ---
-import { testimonios } from '../data/testimonios';
+import { getCollection } from 'astro:content';
+
+const testimonios = (await getCollection('testimonios')).map((t) => t.data);
 ---
 
 <section class="banda">
@@ -12,9 +14,9 @@ import { testimonios } from '../data/testimonios';
             <div class="estrellas" aria-label="5 de 5 estrellas">
               ★★★★★
             </div>
-            <blockquote>«{t.quote}»</blockquote>
+            <blockquote>«{t.texto}»</blockquote>
             <figcaption>
-              {t.name} <span>· {t.role}</span>
+              {t.nombre} <span>· {t.detalle}</span>
             </figcaption>
           </figure>
         ))

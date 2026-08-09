@@ -1,0 +1,73 @@
+# Cada guion "-" es un video. Copia un bloque completo y cámbiale los datos para agregar otro.
+#
+#   id:        nombre corto sin espacios ni tildes, distinto para cada video.
+#   url:       link del reel o publicación de Instagram ("Compartir" → "Copiar enlace").
+#   categoria: PAES o Universidad.
+#   tema:      uno de los temas de esa categoría (la lista está en src/data/temas.ts).
+#   articulo:  nombre del archivo .md de src/content/articulos/, sin la extensión.
+#              Si lo dejas vacío no aparece el botón "Ver ejercicio" ni el tiempo de lectura.
+#   fecha:     opcional. Si no la pones, no se muestra.
+#   duracion:  opcional. Solo se muestra cuando el video tiene articulo.
+
+- id: paes-m1-f111-01
+  titulo: Ejercicio 1 PAES M1 · Forma 111
+  categoria: PAES
+  tema: Números
+  url: https://www.instagram.com/p/DbMvLiXNjLA/
+  articulo: ''
+
+- id: paes-m1-f111-02
+  titulo: Ejercicio 2 PAES M1 · Forma 111
+  categoria: PAES
+  tema: Números
+  url: https://www.instagram.com/p/DbPZHdTtyHG/
+  articulo: ''
+
+- id: paes-m1-f111-03
+  titulo: Ejercicio 3 PAES M1 · Forma 111
+  categoria: PAES
+  tema: Números
+  url: https://www.instagram.com/p/DbWzV7tvZVR/
+  articulo: ''
+
+- id: paes-m1-f111-04
+  titulo: Ejercicio 4 PAES M1 · Forma 111
+  categoria: PAES
+  tema: Álgebra
+  url: https://www.instagram.com/p/DbW0sL_v_66/
+  articulo: ''
+
+- id: paes-m1-f111-05
+  titulo: Ejercicio 5 PAES M1 · Forma 111
+  categoria: PAES
+  tema: Álgebra
+  url: https://www.instagram.com/p/DbZv26iNqfu/
+  articulo: ''
+
+- id: paes-m1-f111-06
+  titulo: Ejercicio 6 PAES M1 · Forma 111
+  categoria: PAES
+  tema: Álgebra
+  url: https://www.instagram.com/p/DbcQr--N_Sk/
+  articulo: ''
+
+- id: paes-m1-f111-07
+  titulo: Ejercicio 7 PAES M1 · Forma 111
+  categoria: PAES
+  tema: Números
+  url: https://www.instagram.com/p/DbesDsZNIcd/
+  articulo: ''
+
+- id: paes-m1-f111-08
+  titulo: Ejercicio 8 PAES M1 · Forma 111
+  categoria: PAES
+  tema: Números
+  url: https://www.instagram.com/p/DbmhHcCtYvB/
+  articulo: ''
+
+- id: paes-m1-f111-09
+  titulo: Ejercicio 9 PAES M1 · Forma 111
+  categoria: PAES
+  tema: Números
+  url: https://www.instagram.com/p/Dbo6QnsPnvF/
+  articulo: ''

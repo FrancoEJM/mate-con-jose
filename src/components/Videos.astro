@@ -1,80 +1,94 @@
 ---
-import { videos, temasPorCategoria } from '../data/videos';
+import { getCollection } from 'astro:content';
+import { temasPorCategoria } from '../data/temas';
 import VideoEmbed from './VideoEmbed.astro';
 
+const videos = (await getCollection('videos')).map((v) => v.data);
 const categorias = ['Todos', ...Object.keys(temasPorCategoria)];
+
+/** Los filtros solo estorban si hay un puñado de videos. */
+const mostrarFiltros = videos.length > 3;
 ---
 
 <section id="videos">
   <div class="seccion-intro" data-reveal>
     <h2 class="seccion-titulo">Videos</h2>
-    <p>Mis ejercicios de TikTok e Instagram, con la explicación completa paso a paso.</p>
-  </div>
-
-  <div class="filtros" data-reveal>
-    <div class="chips" role="group" aria-label="Filtrar por categoría">
-      {
-        categorias.map((c) => (
-          <button
-            type="button"
-            class="chip"
-            data-cat={c}
-            aria-pressed={c === 'Todos' ? 'true' : 'false'}
-          >
-            {c}
-          </button>
-        ))
-      }
-    </div>
-
-    <div class="buscador">
-      <span aria-hidden="true">⌕</span>
-      <input
-        type="search"
-        id="buscar-videos"
-        placeholder="Buscar ejercicios…"
-        aria-label="Buscar ejercicios"
-      />
-    </div>
+    <p>Ejercicios con explicación paso a paso.</p>
   </div>
 
   {
-    Object.entries(temasPorCategoria).map(([cat, temas]) => (
-      <div class="chips temas" data-temas={cat} hidden role="group" aria-label={`Temas de ${cat}`}>
-        <button type="button" class="subchip" data-topic="" aria-pressed="true">
-          Todos
-        </button>
-        {temas.map((t) => (
-          <button type="button" class="subchip" data-topic={t} aria-pressed="false">
-            {t}
-          </button>
+    mostrarFiltros && (
+      <>
+        <div class="filtros" data-reveal>
+          <div class="chips" role="group" aria-label="Filtrar por categoría">
+            {categorias.map((c) => (
+              <button
+                type="button"
+                class="chip"
+                data-cat={c}
+                aria-pressed={c === 'Todos' ? 'true' : 'false'}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+
+          <div class="buscador">
+            <span aria-hidden="true">⌕</span>
+            <input
+              type="search"
+              id="buscar-videos"
+              placeholder="Buscar ejercicios…"
+              aria-label="Buscar ejercicios"
+            />
+          </div>
+        </div>
+
+        {Object.entries(temasPorCategoria).map(([cat, temas]) => (
+          <div class="chips temas" data-temas={cat} hidden role="group" aria-label={`Temas de ${cat}`}>
+            <button type="button" class="subchip" data-topic="" aria-pressed="true">
+              Todos
+            </button>
+            {temas.map((t) => (
+              <button type="button" class="subchip" data-topic={t} aria-pressed="false">
+                {t}
+              </button>
+            ))}
+          </div>
         ))}
-      </div>
-    ))
+      </>
+    )
   }
 
   <div class="carrusel" id="lista-videos" data-auto-scroll>
     {
       videos.map((v) => (
-        <article data-cat={v.category} data-topic={v.topic} data-title={v.title.toLowerCase()}>
+        <article data-cat={v.categoria} data-topic={v.tema} data-title={v.titulo.toLowerCase()}>
           <div class="cabecera">
             <div class="tags">
-              <span>{v.category}</span>
-              <span>{v.topic}</span>
+              <span>{v.categoria}</span>
+              <span>{v.tema}</span>
             </div>
-            {v.href !== '#' && (
-              <a class="ver" href={v.href} aria-label={`Ver ejercicio escrito: ${v.title}`}>
+            {v.articulo && (
+              <a
+                class="ver"
+                href={`/videos/${v.articulo}/`}
+                aria-label={`Ver ejercicio escrito: ${v.titulo}`}
+              >
                 Ver ejercicio ↗
               </a>
             )}
           </div>
-          <h3>{v.title}</h3>
-          <div class="meta">
-            <span>{v.date}</span>
-            <span>·</span>
-            <span>{v.read}</span>
-          </div>
-          <VideoEmbed url={v.url} title={v.title} />
+          <h3>{v.titulo}</h3>
+          {/* El tiempo de lectura es del artículo: sin artículo no tiene sentido mostrarlo. */}
+          {(v.fecha || (v.articulo && v.duracion)) && (
+            <div class="meta">
+              {v.fecha && <span>{v.fecha}</span>}
+              {v.fecha && v.articulo && v.duracion && <span>·</span>}
+              {v.articulo && v.duracion && <span>{v.duracion}</span>}
+            </div>
+          )}
+          <VideoEmbed url={v.url} title={v.titulo} />
         </article>
       ))
     }
@@ -240,7 +254,8 @@ const categorias = ['Todos', ...Object.keys(temasPorCategoria)];
   }
 
   article h3 {
-    margin: 0 0 10px;
+    /* El margen inferior vive acá para que la tarjeta respire igual sin la línea .meta. */
+    margin: 0 0 16px;
     font-family: var(--serif);
     font-weight: 700;
     font-size: 1.25rem;
@@ -255,7 +270,7 @@ const categorias = ['Todos', ...Object.keys(temasPorCategoria)];
     color: var(--violeta);
     font-size: 13px;
     font-weight: 500;
-    margin-bottom: 18px;
+    margin: -6px 0 18px;
   }
 
   #sin-videos {
@@ -272,64 +287,67 @@ const categorias = ['Todos', ...Object.keys(temasPorCategoria)];
 
 <script>
   const seccion = document.getElementById('videos')!;
-  const tarjetas = Array.from(seccion.querySelectorAll<HTMLElement>('#lista-videos article'));
-  const gruposTemas = Array.from(seccion.querySelectorAll<HTMLElement>('[data-temas]'));
-  const vacio = document.getElementById('sin-videos')!;
-  const lista = document.getElementById('lista-videos')!;
-  const buscar = document.getElementById('buscar-videos') as HTMLInputElement;
+  const buscar = document.getElementById('buscar-videos') as HTMLInputElement | null;
 
-  let cat = 'Todos';
-  let topic = '';
-  let q = '';
+  // Los filtros solo se renderizan cuando hay suficientes videos.
+  if (buscar) {
+    const tarjetas = Array.from(seccion.querySelectorAll<HTMLElement>('#lista-videos article'));
+    const gruposTemas = Array.from(seccion.querySelectorAll<HTMLElement>('[data-temas]'));
+    const vacio = document.getElementById('sin-videos')!;
+    const lista = document.getElementById('lista-videos')!;
 
-  function filtrar() {
-    let visibles = 0;
-    for (const t of tarjetas) {
-      const ok =
-        (cat === 'Todos' || t.dataset.cat === cat) &&
-        (topic === '' || t.dataset.topic === topic) &&
-        (q === '' || t.dataset.title!.includes(q));
-      t.hidden = !ok;
-      if (ok) visibles++;
-    }
-    lista.hidden = visibles === 0;
-    vacio.hidden = visibles > 0;
-    lista.scrollLeft = 0;
-  }
+    let cat = 'Todos';
+    let topic = '';
+    let q = '';
 
-  function marcar(botones: NodeListOf<HTMLElement> | HTMLElement[], activo: HTMLElement) {
-    botones.forEach((b) => b.setAttribute('aria-pressed', String(b === activo)));
-  }
-
-  seccion.querySelectorAll<HTMLElement>('.chip').forEach((btn, _, todos) => {
-    btn.addEventListener('click', () => {
-      cat = btn.dataset.cat!;
-      topic = '';
-      marcar(todos, btn);
-      // Al cambiar de categoría se reinician los subfiltros de tema.
-      for (const g of gruposTemas) {
-        g.hidden = g.dataset.temas !== cat;
-        g.querySelectorAll<HTMLElement>('.subchip').forEach((s) =>
-          s.setAttribute('aria-pressed', String(s.dataset.topic === ''))
-        );
+    const filtrar = () => {
+      let visibles = 0;
+      for (const t of tarjetas) {
+        const ok =
+          (cat === 'Todos' || t.dataset.cat === cat) &&
+          (topic === '' || t.dataset.topic === topic) &&
+          (q === '' || t.dataset.title!.includes(q));
+        t.hidden = !ok;
+        if (ok) visibles++;
       }
-      filtrar();
-    });
-  });
+      lista.hidden = visibles === 0;
+      vacio.hidden = visibles > 0;
+      lista.scrollLeft = 0;
+    };
 
-  for (const grupo of gruposTemas) {
-    const subs = grupo.querySelectorAll<HTMLElement>('.subchip');
-    subs.forEach((btn) => {
+    const marcar = (botones: NodeListOf<HTMLElement> | HTMLElement[], activo: HTMLElement) =>
+      botones.forEach((b) => b.setAttribute('aria-pressed', String(b === activo)));
+
+    seccion.querySelectorAll<HTMLElement>('.chip').forEach((btn, _, todos) => {
       btn.addEventListener('click', () => {
-        topic = btn.dataset.topic!;
-        marcar(subs, btn);
+        cat = btn.dataset.cat!;
+        topic = '';
+        marcar(todos, btn);
+        // Al cambiar de categoría se reinician los subfiltros de tema.
+        for (const g of gruposTemas) {
+          g.hidden = g.dataset.temas !== cat;
+          g.querySelectorAll<HTMLElement>('.subchip').forEach((s) =>
+            s.setAttribute('aria-pressed', String(s.dataset.topic === ''))
+          );
+        }
         filtrar();
       });
     });
-  }
 
-  buscar.addEventListener('input', () => {
-    q = buscar.value.trim().toLowerCase();
-    filtrar();
-  });
+    for (const grupo of gruposTemas) {
+      const subs = grupo.querySelectorAll<HTMLElement>('.subchip');
+      subs.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          topic = btn.dataset.topic!;
+          marcar(subs, btn);
+          filtrar();
+        });
+      });
+    }
+
+    buscar.addEventListener('input', () => {
+      q = buscar.value.trim().toLowerCase();
+      filtrar();
+    });
+  }
 </script>

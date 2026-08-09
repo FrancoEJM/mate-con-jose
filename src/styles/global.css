@@ -13,6 +13,10 @@
   --texto-suave: #6b6f86;
   --texto-tenue: #9a94a8;
   --texto-claro: #e7e2f2;
+  /* Rojo apagado, en la misma familia tostada de la paleta. */
+  --rojo-fondo: #f7e8e6;
+  --rojo-borde: #dcb3ad;
+  --rojo-texto: #9c4f45;
 
   /* Tipografía */
   --serif: 'Playfair Display', Georgia, serif;
@@ -227,25 +231,18 @@ img {
   flex: 0 0 auto;
 }
 
-/* Carruseles horizontales */
+/* Carruseles horizontales, sin barra de scroll a la vista. */
 .carrusel {
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .carrusel::-webkit-scrollbar {
-  height: 8px;
-}
-
-.carrusel::-webkit-scrollbar-thumb {
-  background: #d9cebb;
-  border-radius: 99px;
-}
-
-.carrusel::-webkit-scrollbar-track {
-  background: transparent;
+  display: none;
 }
 
 /* Diálogos nativos: modales de programa, lightbox y menú móvil */

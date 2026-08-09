@@ -4,26 +4,23 @@ import Base from "./Base.astro";
 import VideoEmbed from "../components/VideoEmbed.astro";
 import { sitio, waAgendar } from "../data/sitio";
 
-export interface Frontmatter {
-  title: string;
-  description?: string;
-  tags: string[];
-  date: string;
-  read: string;
-  videoUrl?: string;
-}
-
 interface Props {
-  frontmatter: Frontmatter;
+  datos: {
+    titulo: string;
+    descripcion?: string;
+    tags: string[];
+    fecha: string;
+    duracion: string;
+    url?: string;
+  };
 }
 
-const { title, description, tags, date, read, videoUrl } =
-  Astro.props.frontmatter;
+const { titulo, descripcion, tags, fecha, duracion, url } = Astro.props.datos;
 ---
 
 <Base
-  title={`${title} · ${sitio.nombre}`}
-  description={description}
+  title={`${titulo} · ${sitio.nombre}`}
+  description={descripcion}
   navVariante="simple"
 >
   <article>
@@ -31,18 +28,18 @@ const { title, description, tags, date, read, videoUrl } =
       <div class="tags">
         {tags.map((t) => <span>{t}</span>)}
       </div>
-      <h1>{title}</h1>
+      <h1>{titulo}</h1>
       <div class="meta">
-        <span>Por {sitio.autora}</span><span>·</span><span>{date}</span><span
+        <span>Por {sitio.autora}</span><span>·</span><span>{fecha}</span><span
           >·</span
-        ><span>{read}</span>
+        ><span>{duracion}</span>
       </div>
     </header>
 
     {
-      videoUrl && (
+      url && (
         <div class="video">
-          <VideoEmbed url={videoUrl} title={title} />
+          <VideoEmbed url={url} title={titulo} />
           <p class="pie">
             Mira el ejercicio en video y, si quieres el detalle completo, sigue
             la explicación escrita — va aún más paso a paso.

@@ -12,7 +12,7 @@ const { variante = 'completa' } = Astro.props;
 <nav id="nav">
   <div class="barra">
     <a class="marca" href={variante === 'completa' ? '#inicio' : '/'}>
-      <img src="/assets/logo.png" alt={`Logo ${sitio.nombre}`} width="48" height="48" />
+      <img src="/img/sitio/logo.png" alt={`Logo ${sitio.nombre}`} width="48" height="48" />
       <span>{sitio.nombre}</span>
     </a>
 
@@ -132,7 +132,8 @@ const { variante = 'completa' } = Astro.props;
     gap: 6px;
   }
 
-  .links-escritorio a {
+  /* :not(.btn) para no pisarle el tamaño ni el color al botón de acción. */
+  .links-escritorio a:not(.btn) {
     padding: 8px 12px;
     color: var(--tinta);
     font-weight: 500;
@@ -140,14 +141,16 @@ const { variante = 'completa' } = Astro.props;
     border-radius: 10px;
   }
 
-  .links-escritorio a:hover {
+  .links-escritorio a:not(.btn):hover {
     color: var(--violeta-osc);
   }
 
   .btn-nav {
     margin-left: 6px;
-    padding: 11px 20px;
+    padding: 13px 24px;
     font-size: 15px;
+    font-weight: 700;
+    color: var(--papel);
     border-radius: 12px;
     box-shadow: 0 6px 16px rgba(139, 124, 200, 0.35);
   }
