@@ -60,7 +60,10 @@ const mostrarFiltros = videos.length > 3;
     )
   }
 
-  <div class="carrusel" id="lista-videos" data-auto-scroll>
+  <div class="carrusel-wrap">
+    <button type="button" class="flecha-carrusel flecha-prev" data-flecha="prev" aria-label="Ver videos anteriores">‹</button>
+    <button type="button" class="flecha-carrusel flecha-next" data-flecha="next" aria-label="Ver más videos">›</button>
+    <div class="carrusel" id="lista-videos" data-auto-scroll>
     {
       videos.map((v) => (
         <article data-cat={v.categoria} data-topic={v.tema} data-title={v.titulo.toLowerCase()}>
@@ -92,6 +95,7 @@ const mostrarFiltros = videos.length > 3;
         </article>
       ))
     }
+    </div>
   </div>
 
   <p id="sin-videos" hidden>No se encontraron ejercicios. Prueba con otro tema o término.</p>
@@ -313,6 +317,8 @@ const mostrarFiltros = videos.length > 3;
       lista.hidden = visibles === 0;
       vacio.hidden = visibles > 0;
       lista.scrollLeft = 0;
+      // Filtrar cambia cuánto hay que desplazar: avisa a las flechas para que se recalculen.
+      lista.dispatchEvent(new Event('scroll'));
     };
 
     const marcar = (botones: NodeListOf<HTMLElement> | HTMLElement[], activo: HTMLElement) =>

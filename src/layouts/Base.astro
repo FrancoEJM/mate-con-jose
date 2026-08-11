@@ -1,13 +1,13 @@
 ---
-import '../styles/global.css';
-import Nav from '../components/Nav.astro';
-import Footer from '../components/Footer.astro';
-import { sitio } from '../data/sitio';
+import "../styles/global.css";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import { sitio } from "../data/sitio";
 
 interface Props {
   title: string;
   description?: string;
-  navVariante?: 'completa' | 'simple';
+  navVariante?: "completa" | "simple";
   /** Los símbolos matemáticos de fondo. Solo en la portada. */
   decor?: boolean;
 }
@@ -15,18 +15,70 @@ interface Props {
 const {
   title,
   description = sitio.descripcion,
-  navVariante = 'completa',
+  navVariante = "completa",
   decor = false,
 } = Astro.props;
 
 const decoraciones = [
-  { s: '∫', top: '8%', left: '4%', size: '120px', color: 'var(--tinta)', op: 0.035 },
-  { s: 'f(x)=ax²+bx+c', top: '24%', right: '6%', size: '90px', color: 'var(--violeta)', op: 0.06, it: true },
-  { s: '∑', top: '52%', left: '7%', size: '80px', color: 'var(--violeta)', op: 0.05 },
-  { s: '√', top: '70%', right: '10%', size: '110px', color: 'var(--tinta)', op: 0.035 },
-  { s: 'π · Δy/Δx', top: '40%', left: '42%', size: '70px', color: 'var(--violeta)', op: 0.04, it: true },
-  { s: 'lim x→∞', bottom: '6%', left: '30%', size: '60px', color: 'var(--tinta)', op: 0.04, it: true },
-  { s: 'θ', top: '14%', right: '34%', size: '64px', color: 'var(--violeta)', op: 0.045 },
+  {
+    s: "∫",
+    top: "8%",
+    left: "4%",
+    size: "120px",
+    color: "var(--tinta)",
+    op: 0.035,
+  },
+  {
+    s: "f(x)=ax²+bx+c",
+    top: "24%",
+    right: "6%",
+    size: "90px",
+    color: "var(--violeta)",
+    op: 0.06,
+    it: true,
+  },
+  {
+    s: "∑",
+    top: "52%",
+    left: "7%",
+    size: "80px",
+    color: "var(--violeta)",
+    op: 0.05,
+  },
+  {
+    s: "√",
+    top: "70%",
+    right: "10%",
+    size: "110px",
+    color: "var(--tinta)",
+    op: 0.035,
+  },
+  {
+    s: "π · Δy/Δx",
+    top: "40%",
+    left: "42%",
+    size: "70px",
+    color: "var(--violeta)",
+    op: 0.04,
+    it: true,
+  },
+  {
+    s: "lim x→∞",
+    bottom: "6%",
+    left: "30%",
+    size: "60px",
+    color: "var(--tinta)",
+    op: 0.04,
+    it: true,
+  },
+  {
+    s: "θ",
+    top: "14%",
+    right: "34%",
+    size: "64px",
+    color: "var(--violeta)",
+    op: 0.045,
+  },
 ];
 ---
 
@@ -40,7 +92,10 @@ const decoraciones = [
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content={new URL('/img/sitio/logo.png', Astro.site)} />
+    <meta
+      property="og:image"
+      content={new URL("/img/sitio/logo.png", Astro.site)}
+    />
     <link rel="icon" href="/img/sitio/logo.png" />
     <link rel="canonical" href={Astro.url.href} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -53,7 +108,7 @@ const decoraciones = [
     <script is:inline>
       // Marca que hay JS antes del primer pintado, para que las animaciones de
       // aparición no dejen la página en blanco si el script falla o está desactivado.
-      document.documentElement.classList.add('js');
+      document.documentElement.classList.add("js");
     </script>
   </head>
   <body>
@@ -62,7 +117,7 @@ const decoraciones = [
         <div class="decor" aria-hidden="true">
           {decoraciones.map((d) => (
             <span
-              style={`top:${d.top ?? 'auto'};bottom:${d.bottom ?? 'auto'};left:${d.left ?? 'auto'};right:${d.right ?? 'auto'};font-size:${d.size};color:${d.color};opacity:${d.op};font-style:${d.it ? 'italic' : 'normal'}`}
+              style={`top:${d.top ?? "auto"};bottom:${d.bottom ?? "auto"};left:${d.left ?? "auto"};right:${d.right ?? "auto"};font-size:${d.size};color:${d.color};opacity:${d.op};font-style:${d.it ? "italic" : "normal"}`}
             >
               {d.s}
             </span>
@@ -81,39 +136,76 @@ const decoraciones = [
 
     <script>
       // Aparición al hacer scroll. Sin IntersectionObserver todo queda visible.
-      const els = document.querySelectorAll('[data-reveal]');
-      if (!('IntersectionObserver' in window)) {
-        els.forEach((el) => el.classList.add('visible'));
+      const els = document.querySelectorAll("[data-reveal]");
+      if (!("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("visible"));
       } else {
         const io = new IntersectionObserver(
           (entries) =>
             entries.forEach((e) => {
               if (e.isIntersecting) {
-                e.target.classList.add('visible');
+                e.target.classList.add("visible");
                 io.unobserve(e.target);
               }
             }),
-          { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+          { threshold: 0.12, rootMargin: "0px 0px -40px 0px" },
         );
         els.forEach((el) => io.observe(el));
       }
 
+      const paso = (el: HTMLElement) => {
+        const primera = el.querySelector<HTMLElement>(
+          ":scope > *:not([hidden])",
+        );
+        const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+        return primera
+          ? primera.getBoundingClientRect().width + gap
+          : el.clientWidth * 0.8;
+      };
+
+      document
+        .querySelectorAll<HTMLElement>(".carrusel-wrap")
+        .forEach((wrap) => {
+          const car = wrap.querySelector<HTMLElement>(".carrusel");
+          const prev = wrap.querySelector<HTMLButtonElement>(
+            '[data-flecha="prev"]',
+          );
+          const next = wrap.querySelector<HTMLButtonElement>(
+            '[data-flecha="next"]',
+          );
+          if (!car || !prev || !next) return;
+
+          const actualizar = () => {
+            const max = car.scrollWidth - car.clientWidth;
+            wrap.classList.toggle("con-flechas", max > 4 && !car.hidden);
+            prev.disabled = car.scrollLeft <= 4;
+            next.disabled = car.scrollLeft >= max - 4;
+          };
+
+          prev.addEventListener("click", () =>
+            car.scrollBy({ left: -paso(car), behavior: "smooth" }),
+          );
+          next.addEventListener("click", () =>
+            car.scrollBy({ left: paso(car), behavior: "smooth" }),
+          );
+          car.addEventListener("scroll", actualizar, { passive: true });
+          addEventListener("resize", actualizar);
+          actualizar();
+        });
+
       // Carruseles con avance automático cada 5s. Se pausan con el puntero encima.
-      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        const carruseles = document.querySelectorAll<HTMLElement>('[data-auto-scroll]');
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const carruseles =
+          document.querySelectorAll<HTMLElement>("[data-auto-scroll]");
         if (carruseles.length) {
           setInterval(() => {
             for (const el of carruseles) {
               if (el.hidden || el.scrollWidth <= el.clientWidth + 4) continue;
-              if (el.matches(':hover')) continue;
-              const primera = el.querySelector<HTMLElement>(':scope > *:not([hidden])');
-              const paso = primera
-                ? primera.getBoundingClientRect().width + 24
-                : el.clientWidth * 0.8;
+              if (el.matches(":hover")) continue;
               if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 8) {
-                el.scrollTo({ left: 0, behavior: 'smooth' });
+                el.scrollTo({ left: 0, behavior: "smooth" });
               } else {
-                el.scrollBy({ left: paso, behavior: 'smooth' });
+                el.scrollBy({ left: paso(el), behavior: "smooth" });
               }
             }
           }, 5000);

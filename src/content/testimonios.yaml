@@ -3,21 +3,26 @@
 #   detalle: el curso, universidad o rol de quien lo escribió.
 
 - id: valentina
-  texto: Pasé de un 480 a un 780 en M1. Jose explica con una calma que hace que todo tenga sentido.
+  texto: Subí 300 puntos en la PAES M1 partí con 590 y saqué 890 en la prueba de invierno, tome el curso intensivo PAES y las clases fueron super cercanas, la profe explicaba todo muy bien y logré conseguir el puntaje que necesitaba en muy poco tiempo. Realmente super recomendado.
   nombre: Valentina R.
   detalle: PAES 2025
 
 - id: matias
-  texto: Me salvó en Cálculo I. Las clases online son súper cómodas y siempre quedo con los apuntes.
+  texto: Me salvó en cálculo I, las clases online son realmente cómodas y explicaba todo de una manera que realmente es rápida y fácil de entender.
   nombre: Matías O.
   detalle: U. de Chile
 
 - id: carolina
-  texto: Mi hija por fin le perdió el miedo a la matemática. Muy paciente y ordenada.
+  texto: Mi hija quedó muy contenta con sus clases es una persona muy paciente y lo más importante es que por fin pudo perderle el miedo a la matemática y mejorar su rendimiento en el colegio.
   nombre: Carolina M.
   detalle: Apoderada
 
 - id: ignacio
-  texto: El intensivo PAES me ordenó en las últimas semanas. Los ensayos cronometrados marcaron la diferencia.
+  texto: Pude salvar en tiempo récord mi ramo de álgebra, realmente aprendí y entendí todo muy rápido y lo más importante logré pasar el ramo. Estoy muy agradecida.
   nombre: Ignacio T.
+  detalle: PAES 2025
+
+- id: florencia
+  texto: Tomé el programa intensivo PAES y realmente pude ordenar y organizar mis tiempos en las últimas semanas antes de la prueba, aprendí y entendí todos los contenidos que necesitaba muy rápidamente. Al ser clases individuales realmente se nota la diferencia y dedicación.
+  nombre: Florencia F.
   detalle: PAES 2025

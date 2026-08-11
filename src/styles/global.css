@@ -245,6 +245,71 @@ img {
   display: none;
 }
 
+/* Flechas de los carruseles. El script les pone .con-flechas al contenedor
+   solo cuando hay algo que desplazar, así no aparecen si todo cabe. */
+.carrusel-wrap {
+  position: relative;
+}
+
+.flecha-carrusel {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--papel);
+  border: 1px solid var(--arena);
+  color: var(--violeta-osc);
+  font-family: var(--sans);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(27, 31, 59, 0.12);
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.carrusel-wrap.con-flechas .flecha-carrusel {
+  display: inline-flex;
+}
+
+.flecha-carrusel:hover:not(:disabled) {
+  background: var(--violeta);
+  border-color: var(--violeta);
+  color: var(--papel);
+}
+
+/* En los extremos se esconde en vez de quedar apagada, para no estorbar. */
+.flecha-carrusel:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.flecha-prev {
+  left: 2px;
+}
+
+.flecha-next {
+  right: 2px;
+}
+
+@media (max-width: 860px) {
+  .flecha-carrusel {
+    width: 38px;
+    height: 38px;
+    font-size: 19px;
+  }
+}
+
 /* Diálogos nativos: modales de programa, lightbox y menú móvil */
 dialog {
   border: 0;

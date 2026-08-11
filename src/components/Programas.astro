@@ -1,9 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
-import { wa } from '../data/sitio';
-import { coloresPlan } from '../data/precios';
+import { getCollection } from "astro:content";
+import { wa } from "../data/sitio";
+import { coloresPlan } from "../data/precios";
 
-const programas = (await getCollection('programas')).map((p) => ({
+const programas = (await getCollection("programas")).map((p) => ({
   id: p.id,
   ...p.data,
   /** Mensaje distinto por programa, para que ella sepa cuál le escriben. */
@@ -15,10 +15,13 @@ const destacado = programas.findIndex((p) => p.destacado);
 
 <h3 class="subtitulo" data-reveal><span aria-hidden="true"></span>Programas</h3>
 
-<div class="carrusel programas" data-centrar-en={destacado >= 0 ? destacado : 0}>
+<div
+  class="carrusel programas"
+  data-centrar-en={destacado >= 0 ? destacado : 0}
+>
   {
     programas.map((p) => (
-      <div class:list={['card', { destacado: p.destacado }]}>
+      <div class:list={["card", { destacado: p.destacado }]}>
         {p.destacado && <span class="cinta">Más elegido</span>}
         <div class="card-head">
           <h4>{p.titulo}</h4>
@@ -32,9 +35,14 @@ const destacado = programas.findIndex((p) => p.destacado);
         </ul>
         <div class="acciones">
           <button type="button" class="btn btn-suave" data-abrir={p.id}>
-            Ver programación
+            Ver detalle y valores
           </button>
-          <a class="btn btn-borde cta" href={p.wa} target="_blank" rel="noopener">
+          <a
+            class="btn btn-borde cta"
+            href={p.wa}
+            target="_blank"
+            rel="noopener"
+          >
             Acceder al programa
           </a>
         </div>
@@ -47,7 +55,11 @@ const destacado = programas.findIndex((p) => p.destacado);
   programas.map((p) => {
     const totalSemanas = p.plan?.reduce((a, e) => a + e.semanas, 0) ?? 0;
     return (
-      <dialog id={`prog-${p.id}`} class="modal" aria-label={`Programación de ${p.titulo}`}>
+      <dialog
+        id={`prog-${p.id}`}
+        class="modal"
+        aria-label={`Programación de ${p.titulo}`}
+      >
         <div class="modal-head">
           <button class="cerrar-x" aria-label="Cerrar" data-cerrar>
             ×
@@ -83,10 +95,12 @@ const destacado = programas.findIndex((p) => p.destacado);
               <div
                 class="barra"
                 role="img"
-                aria-label={`Distribución: ${p.plan.map((e) => `${e.eje} ${e.semanas} semanas`).join(', ')}`}
+                aria-label={`Distribución: ${p.plan.map((e) => `${e.eje} ${e.semanas} semanas`).join(", ")}`}
               >
                 {p.plan.map((e, i) => (
-                  <div style={`flex:${e.semanas};background:${coloresPlan[i % coloresPlan.length]}`} />
+                  <div
+                    style={`flex:${e.semanas};background:${coloresPlan[i % coloresPlan.length]}`}
+                  />
                 ))}
               </div>
               <div class="leyenda">
@@ -112,7 +126,7 @@ const destacado = programas.findIndex((p) => p.destacado);
               </h4>
               <div class="valores">
                 {p.valores.map((v) => (
-                  <div class:list={['valor', { destacado: v.destacado }]}>
+                  <div class:list={["valor", { destacado: v.destacado }]}>
                     <div class="etiqueta">{v.etiqueta}</div>
                     <div class="monto">{v.monto}</div>
                     <div class="detalle">{v.detalle}</div>
@@ -124,8 +138,8 @@ const destacado = programas.findIndex((p) => p.destacado);
 
           {!p.incluye && (
             <p class="cierre">
-              Escríbeme por WhatsApp y te envío la programación completa y los valores de este
-              programa.
+              Escríbeme por WhatsApp y te envío la programación completa y los
+              valores de este programa.
             </p>
           )}
 
@@ -136,7 +150,7 @@ const destacado = programas.findIndex((p) => p.destacado);
               </a>
             )}
             <a class="btn btn-borde" href={p.wa} target="_blank" rel="noopener">
-              Acceder por WhatsApp
+              Agendar por WhatsApp
             </a>
             <button type="button" class="btn btn-cerrar" data-cerrar>
               Cerrar
@@ -192,53 +206,67 @@ const destacado = programas.findIndex((p) => p.destacado);
     font-size: 1.4rem;
   }
 
-  .card.destacado {
+  /* Las tres tarjetas comparten el diseño oscuro. */
+  .programas > .card {
     position: relative;
     background: var(--tinta);
     border-color: var(--tinta);
     box-shadow: var(--sombra-alta);
   }
 
-  .card.destacado h4 {
+  .programas > .card h4 {
     color: var(--papel);
   }
 
-  .card.destacado .card-desc {
+  .programas > .card .card-desc {
     color: var(--lila);
   }
 
-  .card.destacado .pastilla {
+  .programas > .card .pastilla {
     background: rgba(181, 169, 218, 0.2);
     color: var(--lila);
   }
 
-  .card.destacado .checklist {
+  .programas > .card .checklist {
     color: var(--texto-claro);
   }
 
-  .card.destacado .checklist li::before {
+  .programas > .card .checklist li::before {
     color: var(--lila);
   }
 
-  .card.destacado .btn-suave {
+  .programas > .card .btn-suave {
     background: rgba(181, 169, 218, 0.16);
     border-color: rgba(181, 169, 218, 0.5);
     color: var(--texto-claro);
   }
 
-  .card.destacado .btn-suave:hover {
+  .programas > .card .btn-suave:hover {
     background: rgba(181, 169, 218, 0.28);
     color: var(--texto-claro);
   }
 
-  .card.destacado .btn-borde {
+  .programas > .card .btn-borde {
+    background: transparent;
+    color: var(--texto-claro);
+    border-color: rgba(181, 169, 218, 0.55);
+  }
+
+  .programas > .card .btn-borde:hover {
+    background: rgba(181, 169, 218, 0.18);
+    color: var(--papel);
+  }
+
+  /* Lo único que distingue al destacado: la cinta y el botón relleno. */
+  .programas > .card.destacado .btn-borde {
     background: var(--violeta);
     color: var(--papel);
     border-color: var(--violeta);
   }
 
-  .card.destacado .btn-borde:hover {
+  .programas > .card.destacado .btn-borde:hover {
     background: var(--lila);
+    color: var(--papel);
   }
 
   .cinta {
@@ -505,28 +533,36 @@ const destacado = programas.findIndex((p) => p.destacado);
 
 <script>
   // Arrancar mostrando el programa destacado al centro, con los otros dos asomando.
-  const tira = document.querySelector<HTMLElement>('[data-centrar-en]');
+  const tira = document.querySelector<HTMLElement>("[data-centrar-en]");
   if (tira) {
     const i = Number(tira.dataset.centrarEn);
     const card = tira.children[i] as HTMLElement | undefined;
     if (card) {
-      tira.scrollLeft = card.offsetLeft - tira.offsetLeft - (tira.clientWidth - card.offsetWidth) / 2;
+      tira.scrollLeft =
+        card.offsetLeft -
+        tira.offsetLeft -
+        (tira.clientWidth - card.offsetWidth) / 2;
     }
   }
 
-  document.querySelectorAll<HTMLElement>('[data-abrir]').forEach((btn) => {
-    const dlg = document.getElementById(`prog-${btn.dataset.abrir}`) as HTMLDialogElement | null;
+  document.querySelectorAll<HTMLElement>("[data-abrir]").forEach((btn) => {
+    const dlg = document.getElementById(
+      `prog-${btn.dataset.abrir}`,
+    ) as HTMLDialogElement | null;
     if (!dlg) return;
 
-    btn.addEventListener('click', () => dlg.showModal());
-    dlg.querySelectorAll('[data-cerrar]').forEach((c) =>
-      c.addEventListener('click', () => dlg.close())
-    );
+    btn.addEventListener("click", () => dlg.showModal());
+    dlg
+      .querySelectorAll("[data-cerrar]")
+      .forEach((c) => c.addEventListener("click", () => dlg.close()));
     // El <dialog> ocupa todo el viewport: solo cuenta como backdrop lo que cae fuera de su caja.
-    dlg.addEventListener('click', (e) => {
+    dlg.addEventListener("click", (e) => {
       const r = dlg.getBoundingClientRect();
       const fuera =
-        e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+        e.clientX < r.left ||
+        e.clientX > r.right ||
+        e.clientY < r.top ||
+        e.clientY > r.bottom;
       if (fuera) dlg.close();
     });
   });

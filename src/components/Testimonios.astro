@@ -7,7 +7,10 @@ const testimonios = (await getCollection('testimonios')).map((t) => t.data);
 <section class="banda">
   <div class="interior">
     <h2 data-reveal>Lo que dicen mis estudiantes</h2>
-    <div class="carrusel" data-auto-scroll>
+    <div class="carrusel-wrap">
+      <button type="button" class="flecha-carrusel flecha-prev" data-flecha="prev" aria-label="Ver testimonios anteriores">‹</button>
+      <button type="button" class="flecha-carrusel flecha-next" data-flecha="next" aria-label="Ver más testimonios">›</button>
+      <div class="carrusel" data-auto-scroll>
       {
         testimonios.map((t) => (
           <figure>
@@ -19,8 +22,9 @@ const testimonios = (await getCollection('testimonios')).map((t) => t.data);
               {t.nombre} <span>· {t.detalle}</span>
             </figcaption>
           </figure>
-        ))
-      }
+          ))
+        }
+      </div>
     </div>
   </div>
 </section>
@@ -48,6 +52,16 @@ const testimonios = (await getCollection('testimonios')).map((t) => t.data);
   .carrusel {
     gap: 20px;
     padding: 8px var(--gutter) 20px;
+  }
+
+  /* Las flechas se alinean con el contenido, no con el borde de la banda.
+     El max() evita que en móvil, con el gutter chico, se salgan de la pantalla. */
+  .carrusel-wrap :global(.flecha-prev) {
+    left: max(2px, calc(var(--gutter) - 22px));
+  }
+
+  .carrusel-wrap :global(.flecha-next) {
+    right: max(2px, calc(var(--gutter) - 22px));
   }
 
   figure {

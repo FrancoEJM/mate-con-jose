@@ -1,7 +1,7 @@
 ---
-import { waAgendar, wa } from '../data/sitio';
-import { clase, nivelacion, clp } from '../data/precios';
-import Programas from './Programas.astro';
+import { waAgendar, wa } from "../data/sitio";
+import { clase, nivelacion, clp } from "../data/precios";
+import Programas from "./Programas.astro";
 ---
 
 <section id="servicios">
@@ -9,7 +9,9 @@ import Programas from './Programas.astro';
     <h2 class="seccion-titulo">Servicios</h2>
   </div>
 
-  <h3 class="subtitulo" data-reveal><span aria-hidden="true"></span>Clases particulares</h3>
+  <h3 class="subtitulo" data-reveal>
+    <span aria-hidden="true"></span>Clases particulares
+  </h3>
 
   <div class="grid-clases">
     <div class="card" data-reveal>
@@ -17,14 +19,25 @@ import Programas from './Programas.astro';
         <h4>Clase particular</h4>
         <span class="pastilla">1 hora</span>
       </div>
-      <p class="card-desc">Ideal para dudas puntuales y reforzar antes de una prueba.</p>
+      <p class="card-desc">
+        Una clase individual personalizada según lo que necesitas. Ideal para
+        resolver dudas puntuales, reforzar contenidos o prepararte antes de una
+        prueba.
+      </p>
       <p class="precio">
-        <span class="monto">{clp(clase.precio)}</span><span class="unidad">/ clase · 1h</span>
+        <span class="monto">{clp(clase.precio)}</span><span class="unidad"
+          >/ clase · 1h</span
+        >
       </p>
       <ul class="checklist">
         {clase.incluye.map((i) => <li>{i}</li>)}
       </ul>
-      <a class="btn btn-borde cta" href={waAgendar} target="_blank" rel="noopener">
+      <a
+        class="btn btn-borde cta"
+        href={waAgendar}
+        target="_blank"
+        rel="noopener"
+      >
         Reservar clase
       </a>
     </div>
@@ -38,12 +51,18 @@ import Programas from './Programas.astro';
       data-max={nivelacion.max}
     >
       <div class="card-head">
-        <h4>Pack de nivelación</h4>
-        <span class="pastilla"><span data-nivel-n>{nivelacion.inicial}</span> clases</span>
+        <h4>Pack de nivelación · Desde 2 clases</h4>
+        <span class="pastilla"
+          ><span data-nivel-n>{nivelacion.inicial}</span> clases</span
+        >
       </div>
       <p class="card-desc">
-        Para quienes vienen con una base débil y necesitan ordenar desde los cimientos. Elige cuántas
-        clases necesitas.
+        Para quienes quieran reforzar su base, ordenar sus conocimientos desde
+        lo esencial y avanzar progresivamente. Partimos con un diagnóstico para
+        identificar lo qué necesitas fortalecer y cuáles son tus objetivos y, a
+        partir de eso, construimos un plan de trabajo a tu ritmo para lograr tus
+        objetivos. Puedes elegir el número de clases según tus necesidades.
+        ¡Mientras más clases tomes, más ahorras!
       </p>
 
       <div class="contador">
@@ -64,14 +83,12 @@ import Programas from './Programas.astro';
           aria-controls="nivel-cantidad">+</button
         >
         <div class="total">
-          <strong data-nivel-total>{clp(nivelacion.inicial * nivelacion.precioPorClase)}</strong>
+          <strong data-nivel-total
+            >{clp(nivelacion.inicial * nivelacion.precioPorClase)}</strong
+          >
           <span>total</span>
         </div>
       </div>
-
-      <p class="nota">
-        ≈ {clp(nivelacion.precioPorClase)} por clase · valor referencial, se ajusta según diagnóstico.
-      </p>
 
       <ul class="checklist">
         {nivelacion.incluye.map((i) => <li>{i}</li>)}
@@ -81,7 +98,7 @@ import Programas from './Programas.astro';
         class="btn btn-borde cta"
         data-nivel-wa
         href={wa(
-          `¡Hola Josefina! Me interesa un pack de nivelación de ${nivelacion.inicial} clases.`
+          `¡Hola Josefina! Me interesa un pack de nivelación de ${nivelacion.inicial} clases.`,
         )}
         target="_blank"
         rel="noopener"
@@ -236,36 +253,38 @@ import Programas from './Programas.astro';
 </style>
 
 <script>
-  import { wa } from '../data/sitio';
-  import { clp } from '../data/precios';
+  import { wa } from "../data/sitio";
+  import { clp } from "../data/precios";
 
-  const card = document.getElementById('nivelacion');
+  const card = document.getElementById("nivelacion");
   if (card) {
     const precio = Number(card.dataset.precio);
     const min = Number(card.dataset.min);
     const max = Number(card.dataset.max);
 
-    const nEls = card.querySelectorAll<HTMLElement>('[data-nivel-n]');
-    const totalEl = card.querySelector<HTMLElement>('[data-nivel-total]')!;
-    const waEl = card.querySelector<HTMLAnchorElement>('[data-nivel-wa]')!;
-    const dec = card.querySelector<HTMLButtonElement>('[data-nivel-dec]')!;
-    const inc = card.querySelector<HTMLButtonElement>('[data-nivel-inc]')!;
+    const nEls = card.querySelectorAll<HTMLElement>("[data-nivel-n]");
+    const totalEl = card.querySelector<HTMLElement>("[data-nivel-total]")!;
+    const waEl = card.querySelector<HTMLAnchorElement>("[data-nivel-wa]")!;
+    const dec = card.querySelector<HTMLButtonElement>("[data-nivel-dec]")!;
+    const inc = card.querySelector<HTMLButtonElement>("[data-nivel-inc]")!;
 
     let n = Number(totalEl.dataset.n ?? nEls[0].textContent);
 
     const pintar = () => {
       nEls.forEach((el) => (el.textContent = String(n)));
       totalEl.textContent = clp(n * precio);
-      waEl.href = wa(`¡Hola Josefina! Me interesa un pack de nivelación de ${n} clases.`);
+      waEl.href = wa(
+        `¡Hola Josefina! Me interesa un pack de nivelación de ${n} clases.`,
+      );
       dec.disabled = n <= min;
       inc.disabled = n >= max;
     };
 
-    dec.addEventListener('click', () => {
+    dec.addEventListener("click", () => {
       n = Math.max(min, n - 1);
       pintar();
     });
-    inc.addEventListener('click', () => {
+    inc.addEventListener("click", () => {
       n = Math.min(max, n + 1);
       pintar();
     });
