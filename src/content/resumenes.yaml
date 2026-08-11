@@ -11,4 +11,14 @@
   titulo: Propiedades de potencias
   imagenes:
     - src: /img/resumenes/potencias-1.jpg
-      alt: 'Resumen visual: propiedades de potencias'
+      alt: "Resumen visual: propiedades de potencias"
+
+- id: notables
+  titulo: Productos notables
+  imagenes:
+    - src: /img/resumenes/01-productos-notables.jpg
+      alt: "Resumen visual: productos notables 01"
+    - src: /img/resumenes/02-productos-notables.jpg
+      alt: "Resumen visual: productos notables 02"
+    - src: /img/resumenes/03-productos-notables.jpg
+      alt: "Resumen visual: productos notables 03"
