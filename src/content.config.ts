@@ -13,7 +13,8 @@ const videos = defineCollection({
     titulo: z.string(),
     categoria: z.enum(['PAES', 'Universidad']),
     tema: z.string(),
-    fecha: z.string().optional(),
+    /** ISO (2026-07-08). La página la muestra formateada en español. */
+    fecha: z.coerce.date().optional(),
     /** Tiempo de lectura del artículo: solo se muestra si el video tiene uno. */
     duracion: z.string().optional(),
     url: z.string().url(),
@@ -79,7 +80,8 @@ const articulos = defineCollection({
     titulo: z.string(),
     descripcion: z.string().optional(),
     tags: z.array(z.string()),
-    fecha: z.string(),
+    /** ISO (2026-07-08). Se muestra formateada y alimenta el datePublished del JSON-LD. */
+    fecha: z.coerce.date(),
     duracion: z.string(),
     url: z.string().url().optional(),
   }),

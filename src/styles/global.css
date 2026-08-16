@@ -308,6 +308,12 @@ img {
     height: 38px;
     font-size: 19px;
   }
+
+  /* Sitio para la barra de acción fija: el relleno es del pie, que ya es oscuro,
+     así no aparece una franja crema bajo el footer. */
+  footer {
+    padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 /* Diálogos nativos: modales de programa, lightbox y menú móvil */

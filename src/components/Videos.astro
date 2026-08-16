@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import { temasPorCategoria } from '../data/temas';
+import { formatearFecha } from '../data/fechas';
 import VideoEmbed from './VideoEmbed.astro';
 
 const videos = (await getCollection('videos')).map((v) => v.data);
@@ -86,7 +87,7 @@ const mostrarFiltros = videos.length > 3;
           {/* El tiempo de lectura es del artículo: sin artículo no tiene sentido mostrarlo. */}
           {(v.fecha || (v.articulo && v.duracion)) && (
             <div class="meta">
-              {v.fecha && <span>{v.fecha}</span>}
+              {v.fecha && <span>{formatearFecha(v.fecha)}</span>}
               {v.fecha && v.articulo && v.duracion && <span>·</span>}
               {v.articulo && v.duracion && <span>{v.duracion}</span>}
             </div>

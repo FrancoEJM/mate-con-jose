@@ -206,58 +206,47 @@ const destacado = programas.findIndex((p) => p.destacado);
     font-size: 1.4rem;
   }
 
-  /* Las tres tarjetas comparten el diseño oscuro. */
-  .programas > .card {
+  /* Solo el destacado va oscuro; los de los costados quedan con la tarjeta clara
+     por defecto, para que el del centro resalte. */
+  .programas > .card.destacado {
     position: relative;
     background: var(--tinta);
     border-color: var(--tinta);
     box-shadow: var(--sombra-alta);
   }
 
-  .programas > .card h4 {
+  .programas > .card.destacado h4 {
     color: var(--papel);
   }
 
-  .programas > .card .card-desc {
+  .programas > .card.destacado .card-desc {
     color: var(--lila);
   }
 
-  .programas > .card .pastilla {
+  .programas > .card.destacado .pastilla {
     background: rgba(181, 169, 218, 0.2);
     color: var(--lila);
   }
 
-  .programas > .card .checklist {
+  .programas > .card.destacado .checklist {
     color: var(--texto-claro);
   }
 
-  .programas > .card .checklist li::before {
+  .programas > .card.destacado .checklist li::before {
     color: var(--lila);
   }
 
-  .programas > .card .btn-suave {
+  .programas > .card.destacado .btn-suave {
     background: rgba(181, 169, 218, 0.16);
     border-color: rgba(181, 169, 218, 0.5);
     color: var(--texto-claro);
   }
 
-  .programas > .card .btn-suave:hover {
+  .programas > .card.destacado .btn-suave:hover {
     background: rgba(181, 169, 218, 0.28);
     color: var(--texto-claro);
   }
 
-  .programas > .card .btn-borde {
-    background: transparent;
-    color: var(--texto-claro);
-    border-color: rgba(181, 169, 218, 0.55);
-  }
-
-  .programas > .card .btn-borde:hover {
-    background: rgba(181, 169, 218, 0.18);
-    color: var(--papel);
-  }
-
-  /* Lo único que distingue al destacado: la cinta y el botón relleno. */
   .programas > .card.destacado .btn-borde {
     background: var(--violeta);
     color: var(--papel);

@@ -1,202 +1,99 @@
 # Mate con Jose
 
-Sitio de clases particulares de matemática (PAES y universidad). Astro estático, sin backend ni
-base de datos.
+Sitio de clases particulares de matemática (PAES y universidad) de Josefina Vergara. Astro
+estático, sin backend ni base de datos. En producción en <https://mateconjose.cl>, desplegado con
+Cloudflare Workers (`wrangler.jsonc` sirve `./dist` como assets estáticos; el build lo dispara
+Workers Builds al pushear).
 
 ```bash
 npm install
 npm run dev
 ```
 
-Queda en `http://localhost:4321`. Se actualiza solo al guardar un archivo.
+| Comando           | Para qué                                                  |
+| ----------------- | --------------------------------------------------------- |
+| `npm run dev`     | Servidor de desarrollo en `localhost:4321`                 |
+| `npm run build`   | Genera el sitio en `dist/`                                 |
+| `npm run preview` | Sirve `dist/` como se verá publicado                       |
+| `npm run check`   | Tipos + validación de las colecciones de contenido         |
+| `npm run optimizar` | Re-comprime las imágenes de `public/img/` en su lugar    |
 
-| Comando         | Para qué                                                     |
-| --------------- | ------------------------------------------------------------ |
-| `npm run dev`   | Ver el sitio mientras se edita                                |
-| `npm run build` | Generar el sitio final en `dist/`                             |
-| `npm run preview` | Ver el resultado de `build` como se verá publicado          |
-| `npm run check` | Revisar que no haya errores de tipos ni contenido inválido    |
-
----
-
-# Cómo agregar contenido
-
-Todo lo que se publica está en **`src/content/`**. Son archivos de texto: se editan, se guardan y
-el sitio se actualiza solo. No hay que tocar código.
-
-Cada archivo empieza con instrucciones comentadas (las líneas que parten con `#`). Si algo queda
-mal escrito, `npm run dev` lo dice en pantalla con el archivo y el campo exactos — no publica algo
-roto.
-
-**Regla de oro:** los espacios del principio de cada línea importan. Lo más seguro es copiar un
-bloque que ya existe y cambiarle los datos.
-
-## Un video nuevo
-
-1. Abre `src/content/videos.yaml`.
-2. Copia un bloque completo (desde el `- id:` hasta la última línea) y pégalo abajo.
-3. Cambia el `id` (nombre corto, sin espacios ni tildes, distinto a los demás), el `titulo`, el
-   `tema` y el `url`.
-
-```yaml
-- id: paes-m1-f111-10
-  titulo: Ejercicio 10 PAES M1 · Forma 111
-  categoria: PAES
-  tema: Números
-  url: https://www.instagram.com/p/XXXXXXXX/
-  articulo: ''
-```
-
-El `url` sale del botón **Compartir → Copiar enlace** de Instagram. Sirven tanto los links `/p/`
-como los `/reel/`. Solo se incrustan publicaciones de Instagram, que son las únicas que muestran
-la vista previa dentro de la página; con cualquier otro link la tarjeta se ve igual pero lleva al
-video en lugar de reproducirlo.
-
-Los temas válidos por categoría están en `src/data/temas.ts`. Si quieres uno nuevo, agrégalo ahí
-primero y después úsalo en el video.
-
-`fecha` y `duracion` son opcionales. La duración es el tiempo de lectura del artículo, así que solo
-se muestra cuando el video tiene uno.
-
-Los filtros y el buscador aparecen solos cuando hay más de 3 videos.
-
-## Un resumen visual nuevo
-
-1. Deja la imagen en `public/img/resumenes/`.
-2. Abre `src/content/resumenes.yaml` y copia el bloque que ya está.
-
-```yaml
-- id: logaritmos
-  titulo: Propiedades de logaritmos
-  imagenes:
-    - src: /img/resumenes/logaritmos-1.jpg
-      alt: 'Resumen visual: propiedades de logaritmos'
-    - src: /img/resumenes/logaritmos-2.jpg
-      alt: 'Resumen visual: ejemplos de logaritmos'
-```
-
-Un resumen puede tener **varias imágenes**: agrega más pares `- src:` / `alt:` bajo `imagenes`. En
-la sección se ve la primera con una marca que indica cuántas hay, y al pincharla se abren todas
-como un carrusel que se desliza hacia el lado, igual que en Instagram.
-
-El `alt` es la descripción para quien no puede ver la imagen (lectores de pantalla, o si la imagen
-no carga). Una frase diciendo de qué se trata.
-
-## Un testimonio nuevo
-
-`src/content/testimonios.yaml`. Copia un bloque y cambia `texto`, `nombre` y `detalle`. Las
-comillas que se ven en la página las pone el sitio; no hay que escribirlas.
-
-## Una explicación nueva en el blog
-
-1. Crea un archivo en `src/content/articulos/`, por ejemplo `logaritmos.md`.
-2. Copia la cabecera de `ecuaciones-cuadraticas.md` (todo lo que va entre las dos líneas de `---`)
-   y cámbiale los datos.
-3. Escribe abajo con Markdown: `## Título`, `**negrita**`, `*cursiva*`, listas con `-`.
-
-Queda publicado en `/videos/logaritmos/`. Para que aparezca el botón "Ver ejercicio" en la tarjeta
-de un video, pon `articulo: logaritmos` en ese video dentro de `videos.yaml` (y ahí sí conviene
-llenarle la `duracion`).
-
-### Fórmulas
-
-Dentro del texto, entre signos peso: `la fórmula $ax^2 + bx + c = 0$ se usa...`
-
-Centrada y grande, con `$$` **en líneas aparte**:
-
-```markdown
-$$
-x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
-$$
-```
-
-Hay dos cajas de color, copiándolas tal cual del artículo de ejemplo: la del enunciado (con `>` al
-principio de cada línea) y la de la solución (`<div class="solucion">`).
-
-## Programas, precios y datos de contacto
-
-| Qué                                          | Archivo                        |
-| -------------------------------------------- | ------------------------------ |
-| Los tres programas, su contenido y sus valores | `src/content/programas.yaml`   |
-| Valor de la clase suelta y del pack de nivelación | `src/data/precios.ts`       |
-| WhatsApp, correo, Instagram, TikTok           | `src/data/sitio.ts`            |
-| Los temas de los filtros de videos            | `src/data/temas.ts`            |
-| Los enlaces del menú de arriba                | `src/data/sitio.ts`            |
-
-Cada programa arma solo su mensaje de WhatsApp con su propio nombre, así que al cambiar el `titulo`
-en `programas.yaml` cambia también el mensaje.
-
-Para cambiar el PDF descargable de un programa: deja el archivo en `public/pdf/` y apunta el campo
-`pdf:` a `/pdf/nombre-del-archivo.pdf`.
-
-## Fotos e imágenes
-
-| Carpeta                 | Qué va ahí                            |
-| ----------------------- | ------------------------------------- |
-| `public/img/sitio/`     | Logo y códigos QR                     |
-| `public/img/resumenes/` | Las imágenes de los resúmenes         |
-| `public/pdf/`           | Los programas descargables            |
-
-En los archivos de contenido, la ruta se escribe sin el `public`: una imagen guardada en
-`public/img/resumenes/x.jpg` se escribe `/img/resumenes/x.jpg`.
-
-## Guardar los cambios
-
-El sitio **todavía no está publicado en internet**: por ahora solo corre en el computador y el
-código vive en GitHub. Para guardar lo editado:
-
-```bash
-npm run build
-```
-
-Si eso termina sin errores, el contenido está bien escrito. Después:
-
-```bash
-git add .
-git commit -m "Agrego ejercicio 10"
-git push
-```
-
----
-
-# Estructura
+## Estructura
 
 ```
 src/
-  content/       ← el contenido editable
-    videos.yaml
-    resumenes.yaml
+  content/              contenido, validado por src/content.config.ts
+    videos.yaml           tarjetas de la sección Videos
+    resumenes.yaml        imágenes descargables (una o varias por resumen)
     testimonios.yaml
-    programas.yaml
-    articulos/          una explicación del blog por archivo .md
-  content.config.ts     qué campos lleva cada archivo de contenido
-  data/          precios, contacto y la lista de temas
-  components/    una sección de la página por archivo
-  layouts/       Base.astro (armazón) y Articulo.astro (posts con fórmulas)
+    programas.yaml        los tres programas, su contenido y sus valores
+    articulos/*.md        explicaciones del blog, con LaTeX
+  data/                 config que no es contenido
+    sitio.ts              contacto, redes, token de analítica
+    precios.ts            clase suelta y pack de nivelación
+    temas.ts              temas de los filtros de video
+    fechas.ts             formateo ISO → "8 jul 2026"
+    jsonld.ts             datos estructurados schema.org
+  components/           una sección de la portada por archivo
+  layouts/              Base.astro (armazón) · Articulo.astro (posts)
   pages/
-    index.astro           la portada
-    videos/[slug].astro   genera una página por cada artículo
-  styles/global.css       colores y estilos compartidos
+    index.astro
+    videos/[slug].astro   una página por cada .md de articulos/
+  styles/global.css     tokens de color y utilidades compartidas
 public/
-  img/sitio/ · img/resumenes/ · pdf/
+  img/sitio/ · img/resumenes/ · pdf/ · robots.txt
+scripts/optimizar-imagenes.mjs
 ```
 
-## Notas técnicas
+## Contenido
 
-- El contenido usa *content collections* de Astro con validación Zod: `src/content.config.ts`
-  define qué campos son obligatorios y de qué tipo, así que un archivo mal escrito falla el build
-  en vez de publicarse a medias.
+Las colecciones usan el loader `file()`/`glob()` de Astro con esquemas Zod en
+`src/content.config.ts`: un campo mal escrito rompe el build en vez de publicarse a medias.
+
+- **Videos** (`videos.yaml`) — solo se incrustan publicaciones de Instagram (`/p/` o `/reel/`), que
+  son las únicas que muestran preview embebido; con cualquier otra URL `VideoEmbed.astro` cae a una
+  tarjeta que enlaza al original. `articulo` es el slug de un `.md` de `articulos/`; si está vacío
+  no se pinta el botón "Ver ejercicio" ni el tiempo de lectura. Los filtros y el buscador aparecen
+  solos sobre 3 videos.
+- **Resúmenes** (`resumenes.yaml`) — `imagenes` es un array; con más de una, la grilla muestra un
+  badge con el total y el visor se convierte en carrusel.
+- **Artículos** (`articulos/*.md`) — `fecha` va en ISO (`2026-07-08`) y se muestra formateada con
+  `formatearFecha()`; ese mismo valor alimenta el `datePublished` del JSON-LD. Fórmulas con `$…$`
+  inline y `$$` **en líneas aparte** para bloque.
+
+## SEO
+
+- `@astrojs/sitemap` genera `sitemap-index.xml`; `public/robots.txt` lo referencia.
+- `Base.astro` emite el set completo de Open Graph. Sin etiquetas de Twitter: no hay cuenta.
+- JSON-LD desde `src/data/jsonld.ts`: `ProfessionalService` en la portada (área Valdivia + Chile),
+  `BlogPosting` en cada artículo. Se pasa por la prop `jsonLd` de `Base.astro`.
+- **No se marcan los testimonios como `Review`**: Google ignora las reseñas que un negocio publica
+  sobre sí mismo, así que no producirían estrellas.
+
+## Analítica
+
+Cloudflare Web Analytics, sin cookies ni banner de consentimiento. **No hay nada que instalar en
+el código**: al estar el dominio en Cloudflare, el beacon se inyecta solo en las respuestas HTML de
+la zona. Agregar el `<script>` a mano contaría cada visita dos veces.
+
+Panel → Analytics & Logs → Web Analytics.
+
+## Imágenes
+
+`npm run optimizar` reduce en su lugar lo que hay en `public/img/`, manteniendo nombre y extensión
+para no tocar rutas. Es destructivo: los originales se recuperan con `git checkout public/img`.
+Anchos máximos en `REGLAS`, dentro del script.
+
+## Notas de implementación
+
 - Toda la interactividad es JavaScript suelto, sin framework. Modales, menú y visor de resúmenes
-  usan `<dialog>` nativo (Escape, foco atrapado y fondo oscuro gratis); los carruseles usan
-  `scroll-snap` de CSS.
+  usan `<dialog>` nativo; los carruseles, `scroll-snap` de CSS.
 - Los carruseles miden sus tarjetas en `%` del contenedor, no en `vw`, para que el sobrante que
-  dejan la tarjeta central y el `gap` siempre alcance para que las vecinas asomen.
-- KaTeX renderiza las fórmulas durante el build: el HTML sale con las fórmulas listas y no se
-  descarga JavaScript de matemática en el navegador.
-- Escritorio y móvil se distinguen con media queries de CSS, no con JavaScript, así que no hay
-  parpadeo al cargar.
-- Sin JavaScript la página se ve completa: las animaciones de aparición solo se activan si el
-  script del `<head>` alcanzó a marcar `<html class="js">`.
-- Las imágenes del visor de resúmenes pasan a `eager` al abrirlo. Dentro de un `<dialog>` cerrado
-  las imágenes `lazy` nunca se descargan, y sin ellas la tira no tiene ancho que desplazar.
-- Los iconos de marca del pie son SVG en línea de [Simple Icons](https://simpleicons.org) (CC0).
+  dejan la tarjeta central y el `gap` alcance para que las vecinas asomen.
+- KaTeX renderiza en build: el HTML sale con las fórmulas listas y el navegador solo baja los 4
+  `.woff2` que necesita.
+- Escritorio y móvil se separan con media queries, no con JavaScript, así que no hay parpadeo.
+- Sin JavaScript la página se ve completa: el `opacity: 0` de las animaciones cuelga de
+  `<html class="js">`, que pone un script inline en el `<head>`.
+- Las imágenes del visor pasan a `eager` al abrirlo: dentro de un `<dialog>` cerrado las `lazy`
+  nunca se descargan y la tira no tendría ancho que desplazar.

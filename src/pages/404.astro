@@ -1,0 +1,102 @@
+---
+import Base from "../layouts/Base.astro";
+import { sitio, waAgendar } from "../data/sitio";
+
+/**
+ * Cloudflare la sirve gracias a `not_found_handling: "404-page"` de wrangler.jsonc,
+ * que responde con dist/404.html ante cualquier ruta que no exista.
+ */
+---
+
+<Base
+  title={`Página no encontrada · ${sitio.nombre}`}
+  description="La página que buscas no existe o cambió de dirección."
+  navVariante="simple"
+>
+  {/* El 404 de Cloudflare ya la excluye, pero el canonical apunta siempre a /404/
+      sin importar la ruta pedida: esto evita que se indexe por accidente. */}
+  <meta slot="head" name="robots" content="noindex" />
+
+  <section>
+    <p class="codigo" aria-hidden="true">404</p>
+    <h1>Esta página no existe.</h1>
+    <p class="texto">
+      Puede que el enlace esté mal escrito o que la página haya cambiado de
+      dirección.
+    </p>
+
+    <div class="acciones">
+      <a class="btn btn-primario" href="/">Ir al inicio</a>
+      <a class="btn btn-borde" href="/#videos">Ver los ejercicios</a>
+    </div>
+
+    <p class="ayuda">
+      ¿Buscabas algo puntual? <a href={waAgendar} target="_blank" rel="noopener"
+        >Escríbeme por WhatsApp</a
+      > y te oriento.
+    </p>
+  </section>
+</Base>
+
+<style>
+  section {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: clamp(48px, 12vh, 120px) var(--gutter) clamp(64px, 14vh, 140px);
+    text-align: center;
+  }
+
+  /* El número grande hace de ilustración: no hace falta traer una imagen. */
+  .codigo {
+    margin: 0 0 8px;
+    font-family: var(--serif);
+    font-weight: 800;
+    font-size: clamp(5rem, 22vw, 9rem);
+    line-height: 1;
+    color: var(--violeta);
+    opacity: 0.22;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    margin: 0 0 16px;
+    font-family: var(--serif);
+    font-weight: 800;
+    font-size: clamp(1.9rem, 5vw, 2.8rem);
+    line-height: 1.1;
+    color: var(--tinta);
+    text-wrap: balance;
+  }
+
+  .texto {
+    margin: 0 auto 32px;
+    max-width: 46ch;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--texto-suave);
+  }
+
+  .acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+  }
+
+  .ayuda {
+    margin: 32px 0 0;
+    font-size: 0.95rem;
+    color: var(--texto-tenue);
+  }
+
+  .ayuda a {
+    color: var(--violeta-osc);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .ayuda a:hover {
+    color: var(--violeta);
+  }
+</style>

@@ -1,18 +1,22 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
+import SobreMi from '../components/SobreMi.astro';
 import Servicios from '../components/Servicios.astro';
 import Testimonios from '../components/Testimonios.astro';
 import Videos from '../components/Videos.astro';
 import Resumenes from '../components/Resumenes.astro';
 import { sitio } from '../data/sitio';
+import { negocioJsonLd } from '../data/jsonld';
 ---
 
 <Base
   title={`${sitio.nombre} · Clases particulares de matemática PAES y universidad`}
   decor
+  jsonLd={negocioJsonLd(Astro.site!)}
 >
   <Hero />
+  <SobreMi />
   <Servicios />
   <Testimonios />
   <Videos />
