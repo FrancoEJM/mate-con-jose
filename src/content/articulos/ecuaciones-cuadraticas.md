@@ -2,7 +2,7 @@
 titulo: 'Ecuaciones cuadráticas: resolución paso a paso'
 descripcion: 'Cómo resolver una ecuación cuadrática con la fórmula general, paso a paso y con verificación.'
 tags: ['Álgebra', 'PAES']
-fecha: '8 jul 2026'
+fecha: 2026-07-08
 duracion: '6 min de lectura'
 ---
 

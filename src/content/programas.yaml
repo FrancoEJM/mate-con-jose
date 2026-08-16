@@ -11,11 +11,47 @@
   duracion: 12 semanas
   resumen: Ritmo acelerado para quienes parten con menos tiempo.
   descripcion: Preparación acelerada para quienes parten con menos tiempo, enfocada en los contenidos de mayor impacto.
+  pdf: /pdf/programa-intensivo-paes-m1.pdf
   bullets:
     - Contenidos priorizados por impacto
     - Ensayos cronometrados
     - Técnicas de resolución rápida
     - Cobertura M1 y M2
+  incluye:
+    - Clase de diagnóstico personalizada
+    - 24 clases en vivo (2 semanales de 1h 15min)
+    - Resúmenes teóricos de cada unidad
+    - 12 guías de ejercicios tipo PAES
+    - Formularios con fórmulas y conceptos clave
+    - Videos de resolución paso a paso
+    - 3 ensayos tipo PAES durante el programa
+    - Estrategias para enfrentar la PAES
+    - Seguimiento de dudas por WhatsApp
+    - Planificación semanal organizada
+    - Revisión detallada de guías y ensayos
+  plan:
+    - eje: Números
+      semanas: 3
+    - eje: Álgebra
+      semanas: 2
+    - eje: Funciones
+      semanas: 2
+    - eje: Geometría
+      semanas: 3
+    - eje: Probabilidad y estadística
+      semanas: 2
+  valoresNota: duración 3 meses
+  valores:
+    - etiqueta: Pago mensual
+      monto: 3 × $79.990
+      detalle: Total $239.970 · el 1° de cada mes
+    - etiqueta: 2 cuotas
+      monto: 2 × $109.990
+      detalle: Total $219.980 · al inicio y en la semana 5
+    - etiqueta: Pago único
+      monto: $199.990
+      detalle: El más conveniente
+      destacado: true
 
 - id: rutapaes
   titulo: Ruta PAES · M1
@@ -69,8 +105,42 @@
   duracion: M1 y M2
   resumen: 'Para carreras STEM: Ciencia, Tecnología, Ingeniería y Matemática.'
   descripcion: 'Para carreras STEM (Ciencia, Tecnología, Ingeniería y Matemática): profundidad en Matemática M1 y M2.'
+  pdf: /pdf/programa-ruta-stem.pdf
   bullets:
     - Enfoque en Matemática M1 y M2
     - Profundidad para ingenierías y ciencias
     - Pensamiento matemático aplicado
     - Puente hacia la universidad
+  incluye:
+    - Clase de diagnóstico personalizada
+    - 30 clases en vivo (1 semanal de 1h 15min)
+    - Resúmenes teóricos de cada unidad
+    - 30 guías de ejercicios tipo PAES
+    - Formularios con fórmulas y conceptos clave
+    - Videos de resolución paso a paso de M1 y M2
+    - 3 ensayos tipo PAES durante el programa
+    - Estrategias para enfrentar la PAES
+    - Seguimiento de dudas por WhatsApp
+    - Planificación semanal organizada
+    - Revisión detallada de guías y ensayos
+  plan:
+    - eje: Números
+      semanas: 6
+    - eje: Álgebra y funciones
+      semanas: 9
+    - eje: Geometría
+      semanas: 9
+    - eje: Probabilidad y estadística
+      semanas: 6
+  valoresNota: duración 7 meses
+  valores:
+    - etiqueta: Pago mensual
+      monto: 7 × $41.990
+      detalle: Total $293.930 · el 1° de cada mes
+    - etiqueta: 3 cuotas
+      monto: 3 × $94.990
+      detalle: Total $284.970 · semanas 1, 9 y 18
+    - etiqueta: Pago único
+      monto: $275.990
+      detalle: El más conveniente
+      destacado: true

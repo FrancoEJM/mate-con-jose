@@ -3,25 +3,36 @@ import "katex/dist/katex.min.css";
 import Base from "./Base.astro";
 import VideoEmbed from "../components/VideoEmbed.astro";
 import { sitio, waAgendar } from "../data/sitio";
+import { formatearFecha } from "../data/fechas";
+import { articuloJsonLd } from "../data/jsonld";
 
 interface Props {
   datos: {
     titulo: string;
     descripcion?: string;
     tags: string[];
-    fecha: string;
+    fecha: Date;
     duracion: string;
     url?: string;
   };
 }
 
 const { titulo, descripcion, tags, fecha, duracion, url } = Astro.props.datos;
+
+const jsonLd = articuloJsonLd(Astro.site!, {
+  titulo,
+  descripcion,
+  fecha,
+  url: Astro.url.href,
+});
 ---
 
 <Base
   title={`${titulo} · ${sitio.nombre}`}
   description={descripcion}
   navVariante="simple"
+  tipoOg="article"
+  jsonLd={jsonLd}
 >
   <article>
     <header>
@@ -30,9 +41,9 @@ const { titulo, descripcion, tags, fecha, duracion, url } = Astro.props.datos;
       </div>
       <h1>{titulo}</h1>
       <div class="meta">
-        <span>Por {sitio.autora}</span><span>·</span><span>{fecha}</span><span
-          >·</span
-        ><span>{duracion}</span>
+        <span>Por {sitio.autora}</span><span>·</span><span
+          >{formatearFecha(fecha)}</span
+        ><span>·</span><span>{duracion}</span>
       </div>
     </header>
 

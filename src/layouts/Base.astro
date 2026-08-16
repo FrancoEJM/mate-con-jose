@@ -4,6 +4,7 @@ import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import Icono from "../components/Icono.astro";
 import { sitio, waAgendar } from "../data/sitio";
+import { serializarJsonLd } from "../data/jsonld";
 
 interface Props {
   title: string;
@@ -11,6 +12,10 @@ interface Props {
   navVariante?: "completa" | "simple";
   /** Los símbolos matemáticos de fondo. Solo en la portada. */
   decor?: boolean;
+  /** Datos estructurados de la página. Se omite el <script> si no viene. */
+  jsonLd?: unknown;
+  /** "article" en las explicaciones del blog. */
+  tipoOg?: "website" | "article";
 }
 
 const {
@@ -18,7 +23,11 @@ const {
   description = sitio.descripcion,
   navVariante = "completa",
   decor = false,
+  jsonLd,
+  tipoOg = "website",
 } = Astro.props;
+
+const ogImagen = new URL("/img/sitio/logo.png", Astro.site).href;
 
 const decoraciones = [
   {
@@ -92,11 +101,14 @@ const decoraciones = [
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:image"
-      content={new URL("/img/sitio/logo.png", Astro.site)}
-    />
+    <meta property="og:type" content={tipoOg} />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:site_name" content={sitio.nombre} />
+    <meta property="og:locale" content="es_CL" />
+    <meta property="og:image" content={ogImagen} />
+    <meta property="og:image:width" content="500" />
+    <meta property="og:image:height" content="500" />
+    <meta property="og:image:alt" content={`Logo de ${sitio.nombre}`} />
     <link rel="icon" type="image/png" href="/img/sitio/favicon.png" />
     <link rel="apple-touch-icon" href="/img/sitio/favicon.png" />
     <link rel="canonical" href={Astro.url.href} />
@@ -106,6 +118,17 @@ const decoraciones = [
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Outfit:wght@300;400;500;600;700&family=Dancing+Script:wght@600;700&display=swap"
       rel="stylesheet"
     />
+    {
+      jsonLd && (
+        <script
+          type="application/ld+json"
+          is:inline
+          set:html={serializarJsonLd(jsonLd)}
+        />
+      )
+    }
+    {/* Sin script de analítica: Cloudflare inyecta su beacon automáticamente en
+        las respuestas HTML de la zona. Agregarlo acá contaría cada visita dos veces. */}
     <slot name="head" />
     <script is:inline>
       // Marca que hay JS antes del primer pintado, para que las animaciones de
